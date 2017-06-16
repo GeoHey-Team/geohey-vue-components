@@ -1,1 +1,1 @@
-# geohey-vue-components
+GeoHey基于VueJS封装的通用组件。
