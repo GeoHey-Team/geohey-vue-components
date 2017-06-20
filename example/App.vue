@@ -1,12 +1,14 @@
 <template>
     <div id="app">
         <color-picker></color-picker>
+        <g-button @click="test">Button</g-button>
     </div>
 </template>
 <script>
-import {
-    ColorPicker
-} from '@'
+import * as G from '@'
+import Vue from 'vue'
+
+Vue.use( G );
 
 export default {
     name: 'app',
@@ -16,8 +18,10 @@ export default {
             msg: 'Welcome to Your Vue.js App'
         }
     },
-    components: {
-        ColorPicker
+    methods: {
+        test () {
+            this.$message( '1dasdsadasd' )
+        }
     }
 }
 </script>

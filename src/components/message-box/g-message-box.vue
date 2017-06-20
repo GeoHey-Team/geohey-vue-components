@@ -43,7 +43,7 @@
 
 <script type="text/babel">
 import Popup from '@/utils/popup';
-import GButton from '@/components/common/g-button';
+import GButton from '@/components/button';
 import { addClass, removeClass } from '@/utils/dom';
 
 let typeMap = {

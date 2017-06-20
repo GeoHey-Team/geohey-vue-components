@@ -1,31 +1,46 @@
-$globalFontFamily: 'PingFang SC', "Helvetica Neue", Helvetica, "Microsoft YaHei", Arial, sans-serif;
-$title: 13px;
-$subtitle: 12px;
-
-$blue: #20A0FF;
-$lightBlue: #58B7FF;
-$darkBlue: #1D8CE0;
-
+// color
+$white: #fff;
+$black: #000;
 $mainColor: #273142;
+$primary: #20A0FF;
+$lightPrimary: #58B7FF;
+$darkPrimary: #1D8CE0;
+$zoomSplit: #dbdbdb;
 
+// type color
+$info: $primary;
 $warning: #fd9827;
 $success: #3dbf74;
 $danger: #d9534f;
 
+// font
+$globalFontFamily: 'PingFang SC', "Helvetica Neue", Helvetica, "Microsoft YaHei", Arial, sans-serif;
 
-$fontWhite: #fff;
-$fontBlack: rgba(10,18,32,.87);
+$fontSizeMini: 12px;
+$fontSizeSmall: 13px;
+$fontSizeMid: 14px;
+$fontSizeBase: $fontSizeMid; // 普通文本
+$fontSizeLarge: 16px;
+
+$fontWhite: $white;
+$fontBlack: #2c3e50;
 $fontGray: #889;
-$fontLight: rgba(9,17,32,.65);
+$fontBase: rgba(0, 0, 0, .65); // 主要文本颜色
 
-$bdGray: #ddd;
+// border
+$bdGray: #e6e9f0;
 $bdBlack: #333;
-
 $bdRadius: 3px;
 
-$bgWhite: #fff; 
+// background
+$bgPrimary: #f5f7fa;
+$bgWhite: #fff;
 $bgGray: #eee;
 $bgBlack: #333;
+$bgOption: #e8eef6;
+
+// padding
+$padding: 12px;
 
 @mixin reset {
 

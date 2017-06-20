@@ -49,6 +49,7 @@ export default {
 
 <style lang="scss">
 @import 'common';
+
 .g-button {
     display: inline-block;
     white-space: nowrap;
@@ -62,7 +63,7 @@ export default {
     padding: 0 12px;
     height: 28px;
     line-height: 26px;
-
+    outline: none;
 
     &[class*=g-icon-]+span {
         margin-left: 5px;

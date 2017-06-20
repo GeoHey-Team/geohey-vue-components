@@ -127,6 +127,7 @@ export default {
         overflow: hidden;
 
         > p {
+            margin: 0;
             font-size: $fontSizeBase;
         }
 
