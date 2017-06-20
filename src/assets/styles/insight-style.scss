@@ -1,0 +1,332 @@
+@import './common';
+
+.insight-form-group {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-left: 13px;
+    position: relative;
+
+    &::before {
+        display: block;
+        content: '';
+        width: 4px;
+        height: 1em;
+        border-radius: 2px;
+        background-color: $blue;
+        position: absolute;
+        left: 4px;
+        top: 6px;
+    }
+
+
+    .insight-form-group-title {
+        font-size: $title;
+        height: 26px;
+        line-height: 26px;
+        margin-bottom: 8px;
+    }
+
+    .insight-form-group-content {
+        width: 100%;
+        margin-top: 6px;
+        
+        .insight-form-group-row {
+            width: 100%;
+            height: 26px;
+            line-height: 26px;
+            margin-bottom: 8px;
+            font-size: $subtitle;
+            > label {
+                display: inline-block;
+                width: 70px;
+                height: 100%;
+                float: left;
+            }
+            > div {
+                display: inline-block;
+                height: 100%;
+                float: left;
+
+            }
+        }
+
+    }
+}
+
+.insight-input {
+    width: 100%;
+    min-height: 22px;
+    padding: 4px 5px;
+    border: 1px solid #ddd;
+    border-radius: $bdRadius;
+    font-size: 12px;
+    line-height: 16px;
+    box-sizing: border-box;
+
+    &:hover {
+        border: 1px solid #aaa;
+    }
+
+    &:focus {
+        border: 1px solid $blue;
+    }
+
+    &.disabled {
+        background-color: $bgGray;
+        color: $fontGray;
+
+        &:hover, &:focus {
+            border: 1px solid #ddd;
+        }
+
+    }
+
+    &.error {
+        background-color: rgba(241,87,67,0.07);
+        border: 1px solid $danger;
+
+        &:hover, &:focus {
+            border: 1px solid $danger;
+        }
+
+    }
+}
+
+.insight-textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: $bdRadius;
+    padding: 5px;
+    resize:none;
+
+    &:hover {
+        border: 1px solid #aaa;
+    }
+
+    &:focus {
+        border: 1px solid $blue;
+    }
+
+}
+
+.insight-button {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 4px;
+    color: $fontBlack;
+    border: 1px solid $bgGray;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $blue;
+        color: $blue;
+    }
+
+    &.text {
+        color: $blue;
+        background-color: transparent;
+        border-color: transparent;
+
+        &:hover {
+            color: lighten( $blue, 10% );
+        }
+    }
+
+    &.primary {
+        border-color: transparent;
+        background-color: $blue;
+        color: $fontWhite;
+
+        &:hover {
+            background-color: lighten( $blue, 10% );
+        }
+    }
+
+    &.disabled, &.disabled:hover {
+        color: #bfcbd9;
+        cursor: not-allowed;
+        background-color: #eef1f6;
+        border-color: #d1dbe5;
+    }
+}
+
+input {
+
+}
+
+input[type=checkbox] {
+    position: relative;
+    margin: 0 1px 0 0;
+    cursor: pointer;
+    @include user-select(none);
+    border: 1px solid rgba(0, 0, 0, .25);
+    border-radius: 0;
+    @include appearance(none);
+}
+
+input[type=checkbox] {
+    bottom: 2px;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    background-color: #f2f2f2;
+}
+
+input[type=checkbox]:disabled {
+    background-color: #eee;
+}
+
+input[type=checkbox]:checked {
+    border: 0;
+    background-color: $blue;
+}
+
+input[type=checkbox]:checked::before {
+    position: absolute;
+    top: 6px;
+    left: 4px;
+    width: 65%;
+    height: 2px;
+    content: '';
+    @include rotate(135);
+    background-color: #fff
+}
+
+input[type=checkbox]:checked::after {
+    position: absolute;
+    top: 7px;
+    left: 2px;
+    width: 5px;
+    height: 2px;
+    content: '';
+    @include rotate(-135);
+    background-color: #fff
+}
+
+input[type=radio] {
+    position: relative;
+    bottom: 2px;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0 1px 0 0;
+    @include user-select(none);
+    border: 1px solid #A3ABB0;
+    @include appearance(none);
+}
+
+input[type=radio]:checked {
+    border: 4px solid $blue;
+    background-image: none
+}
+
+// animation
+.insight-loader {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    overflow: hidden;
+    display: none;
+    z-index: 20;
+
+    &.small {
+        height: 2px;
+    }
+
+    &.loading, &.error {
+        display: block;
+        &::after {
+            content: '';
+            display: block;
+        }
+    }
+
+    &.loading::after {
+        height: 100%;
+        width: 50%;
+        transform: translateX(-200%);
+        background-image: linear-gradient(90deg, #1181fb 0%, #32BBFE 90%, #FAFEFF 95%);
+        @include animation( g-loader-bar-progress 1s cubic-bezier(0, 0.85, 0.6, 0.6) infinite );
+    }
+
+    &.error::after {
+        height: 100%;
+        width: 100%;
+        background-color: $danger;
+    }
+
+    @include keyframes( g-loader-bar-progress ) {
+        from {
+            transform: translateX(-200%)
+        }
+        to {
+            transform: translateX(200%)
+        }
+    }
+}
+
+// shape
+.insight-shape-close {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    
+    &::before {
+        display: block;
+        position: absolute;
+        top: -2px;
+        left: 7px;
+        height: 20px;
+        width: 1px;
+        transform: rotate(-45deg);
+        background: #1181FB;
+        content: '';
+    }
+
+    &::after {
+        display: block;
+        position: absolute;
+        top: -2px;
+        right: 8px;
+        height: 20px;
+        width: 1px;
+        transform: rotate(45deg);
+        background: #1181FB;
+        content: '';
+    }
+
+    &.small {
+        width: 14px;
+        height: 14px;
+        &::before {
+            left: 6px;
+            height: 17px;
+        }
+
+        &::after {
+            right: 7px;
+            height: 17px;
+        }
+    }
+
+}
+
+.insight-shape-resize {
+    display: inline-block;
+    cursor: pointer;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-right: 3px solid #ddd;
+        border-bottom: 3px solid #ddd;
+        cursor: se-resize;
+    }
+}
