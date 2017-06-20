@@ -11,22 +11,11 @@
 export default {
     name: 'Hue',
     props: {
-        value: Object,
-        direction: {
-            type: String,
-            // [horizontal | vertical]
-            default: 'horizontal'
-        }
+        value: Object    
     },
     computed: {
         hsv() {
             return this.value
-        },
-        directionClass() {
-            return {
-                'g-color-c-hue-horizontal': this.direction === 'horizontal',
-                'g-color-c-hue-vertical': this.direction === 'vertical'
-            }
         },
         pointerLeft() {
             return this.hsv.h * 100 + '%'
@@ -37,20 +26,18 @@ export default {
             !skip && e.preventDefault()
             var container = this.$refs.container
             var containerWidth = container.clientWidth
-            var left = (e.pageX || e.touches[0].pageX) - (container.getBoundingClientRect().left + window.pageXOffset)
+            var left = ( e.touches ? e.touches[ 0 ].clientX : e.clientX ) - container.getBoundingClientRect().left
             var h
             var percent
 
             if (left < 0) {
                 h = 0
             } else if ( left >= containerWidth ) {
-                h = 359.99
+                h = 360
             } else {
                 percent = left * 100 / containerWidth
                 h = (360 * percent / 100)
             }
-
-            // console.log(  )
 
             h = h / 360;
 

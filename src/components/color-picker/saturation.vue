@@ -47,8 +47,6 @@ export default {
             var containerHeight = container.clientHeight
             var left = ( e.touches ? e.touches[ 0 ].clientX : e.clientX ) - container.getBoundingClientRect().left;
             var top = ( e.touches ? e.touches[ 0 ].clientY : e.clientY ) - container.getBoundingClientRect().top;
-            // console.log( top, containerHeight )
-            // top = 150;
             if ( left < 0 ) {
                 left = 0
             } else if ( left > containerWidth ) {
@@ -62,8 +60,8 @@ export default {
             var bright = -( top / containerHeight ) + 1
             this.throttle( this.onChange, {
                 h: this.hsv.h,
-                s: saturation > 0 ? saturation : 1e-6,
-                v: bright > 0 ? bright : 1e-6
+                s: saturation,
+                v: bright
             } )
         },
         onChange( param ) {

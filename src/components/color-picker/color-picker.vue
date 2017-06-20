@@ -18,33 +18,12 @@
             </div>
         </div>
         <div class="g-color-fields">
-            <color-fields v-model="color"></color-fields>
+            <color-values v-model="color"></color-values>
         </div>
-       <!--  <div class="g-color-field">
-            <div class="g-color-field-double">
-                <ed-in label="HEX" v-model="hex" @on-change="inputChange"></ed-in>
-            </div>
-            <div class="g-color-field-single">
-                <ed-in label="r" v-model="rgba.r" @on-change="inputChange"></ed-in>
-            </div>
-            <div class="g-color-field-single">
-                <ed-in label="g" v-model="rgba.g" @on-change="inputChange"></ed-in>
-            </div>
-            <div class="g-color-field-single">
-                <ed-in label="b" v-model="rgba.b" @on-change="inputChange"></ed-in>
-            </div>
-            <div class="g-color-field-single">
-                <ed-in label="a" 
-                    v-model="color.a" 
-                    :arrow-step="0.01" 
-                    :min="0.01" 
-                    :max="1" 
-                    @on-change="inputChange">    
-                </ed-in>
-            </div>
-        </div> -->
         <div class="g-color-presets">
-            <div class="g-color-presets-color" v-for="c in presetcolor" :style="{background: c}" @click="handlePreset(c)">
+            <div class="g-color-presets-color-wrap" v-for="c in presetcolor" @click="handlePreset(c)">
+                <div class="g-color-presets-color" :style="{ background: c }"></div>
+                <checkboard></checkboard>
             </div>
         </div>
     </div>
@@ -53,10 +32,8 @@
 
 <script>
 import c from '@/utils/color'
-// import tinycolor from 'tinycolor2'
 import checkboard from './checkboard.vue'
-import colorFields from './color-fields'
-import editableInput from './editable-input.vue'
+import colorValues from './color-values'
 import saturation from './saturation.vue'
 import hue from './hue.vue'
 import alpha from './alpha.vue'
@@ -67,13 +44,11 @@ const presetcolor = [
     '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
 ]
 
-var _colorChange = ( () => {
+const colorChange = ( () => {
 
     let color = c();
 
     return value => {
-
-        console.log( value )
 
         if ( value && typeof value === 'object' ) {
             color.setRGBA( ...value );
@@ -104,12 +79,11 @@ export default {
         hue,
         alpha,
         checkboard,
-        colorFields,
-        'ed-in': editableInput
+        colorValues
     },
     data() {
         return {
-            val: _colorChange( this.value ),
+            val: colorChange( this.value ),
             presetcolor: presetcolor
         }
     },
@@ -158,8 +132,8 @@ export default {
             get () {
                 return this.val
             },
-            set ( newVal ) {
-                this.val = newVal
+            set ( val ) {
+                this.val.set( val );
             }
         },
         activeColor() {
@@ -168,67 +142,26 @@ export default {
     },
     watch: {
         value ( newVal ) {
-            this.val = _colorChange(newVal)
+            this.val = colorChange( newVal )
         },
-        val () {
-
-            this.$emit( 'input' );
+        val: {
+            deep: true,
+            handler () {
+                let color;
+                let format = this.format;
+                if ( format === 'object' ) {
+                    color = this.val;
+                } else {
+                    color = this.val.getStyle( format );
+                }
+                this.$emit( 'on-change', color );
+                this.$emit( 'input', color );
+            }
         }
     },
     methods: {
-        colorChange( data ) {
-            this.color = _colorChange( data )
-        },
-        isValidHex( hex ) {
-
-            return tinycolor( hex ).isValid()
-        },
-        simpleCheckForValidColor( data ) {
-            var keysToCheck = [ 'r', 'g', 'b', 'a', 'h', 's', 'a', 'v' ]
-            var checked = 0
-            var passed = 0
-
-            for ( var i = 0; i < keysToCheck.length; i++ ) {
-                var letter = keysToCheck[ i ]
-                if ( data[ letter ] ) {
-                    checked++
-                    if ( !isNaN( data[ letter ] ) ) {
-                        passed++
-                    }
-                }
-            }
-
-            if ( checked === passed ) {
-                return data
-            }
-        },
         handlePreset( c ) {
-            this.colorChange( {
-                hex: c,
-                source: 'hex'
-            } )
-        },
-        childChange( data ) {
-            this.colorChange( data )
-        },
-        inputChange( data ) {
-            if ( !data ) {
-                return
-            }
-            if ( data.hex ) {
-                this.isValidHex( data.hex ) && this.colorChange( {
-                    hex: data.hex,
-                    source: 'hex'
-                } )
-            } else if ( data.r || data.g || data.b || data.a ) {
-                this.colorChange( {
-                    r: data.r || this.color.rgba.r,
-                    g: data.g || this.color.rgba.g,
-                    b: data.b || this.color.rgba.b,
-                    a: data.a || this.color.rgba.a,
-                    source: 'rgba'
-                } )
-            }
+            this.color = colorChange( data )
         }
     }
 }
@@ -242,15 +175,15 @@ export default {
     width: 230px;
     box-sizing: initial;
     background: #fff;
-    border-radius: 4px;
+    border-radius: 2px;
     box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);
+    overflow: hidden;
 
     @include reset;
 
     .g-color-saturation-wrap {
         width: 100%;
         height: 150px;
-        // padding-bottom: 75%;
         position: relative;
         overflow: hidden;
     }
@@ -295,50 +228,34 @@ export default {
             }
         }
     }
+
+    .g-color-presets {
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        text-align: left;
+
+        .g-color-presets-color-wrap {
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            display: inline-block;
+            margin: 0 5px 5px 0;
+            vertical-align: top;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+
+            .g-color-presets-color {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 10;
+                box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+            }
+        }
+    }
 }
 
-// .g-color-field {
-//     display: flex;
-//     padding: 4px 10px 0 10px;
-//     .g-color-editable-input-input {
-//         width: 100%;
-//         padding: 4px 10% 3px;
-//         border: none;
-//         box-shadow: inset 0 0 0 1px #ccc;
-//         font-size: 11px;
-//         border-radius: 3px;
-//     }
-//     .g-color-editable-input-label {
-//         display: block;
-//         text-align: center;
-//         font-size: 11px;
-//         color: #999;
-//         padding-top: 3px;
-//         padding-bottom: 4px;
-//         text-transform: capitalize;
-//     }
-// }
-.g-color-field-single {
-    flex: 1;
-    padding-left: 6px;
-}
-.g-color-field-double {
-    flex: 2;
-}
-.g-color-presets {
-    padding: 0 10px 10px 10px;
-    border-top: 1px; solid: #eee;
-}
-.g-color-presets-color {
-    border-radius: 2px;
-    overflow: hidden;
-    position: relative;
-    display: inline-block;
-    margin: 0 5px 5px 0;
-    vertical-align: top;
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
-}
 </style>

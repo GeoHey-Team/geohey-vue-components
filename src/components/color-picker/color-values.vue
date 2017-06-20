@@ -2,61 +2,38 @@
     <div class="g-color-values">
         <div class="g-color-value" :class="{ 'g-color-value-single': field.length === 1, 'g-color-value-multiple': field.length > 1 }">
             <div class="g-color-input-group" v-for="item in field">
-                <input type="text" class="g-color-input" :value="item.v" @input="inputChange( item.k, $event )">
+                <input type="text" spellcheck="false" class="g-color-input" :value="item.v" @input="handleChange( item.k, $event )">
                 <p class="g-color-label">{{ item.k }}</p>
             </div>
         </div>
-        <!-- <div class="g-color-value g-color-value-multiple">
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">R</p>
-            </div>
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">G</p>
-            </div>
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">B</p>
-            </div>
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">A</p>
-            </div>
-        </div>
-        <div class="g-color-value g-color-value-multiple">
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">H</p>
-            </div>
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">S</p>
-            </div>
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">L</p>
-            </div>
-            <div class="g-color-input-group">
-                <input type="text" class="g-color-input">
-                <p class="g-color-label">A</p>
-            </div>
-        </div> -->
         <button class="g-color-values-change" @click="changeType">--</button>
     </div>
 </template>
 
 
 <script>
+import { clamp } from '@/utils/math'
+
 export default {
-    name: 'g-color-values',
+    name: 'color-values',
     props: {
-        value: {}
+        value: Object
     },
     data () {
         return {
-            type: 'hex',
+            hexSize: 6,
+            type: this.value.a === 1 ? 'hex' : 'rgba',
             val: this.value
+        }
+    },
+    watch: {
+        value ( val ) {
+            this.val = val;
+        },
+        'val.a' ( alpha ) {
+            if ( alpha !== 1 && this.type === 'hex' ) {
+                this.changeType();
+            }
         }
     },
     computed: {
@@ -73,14 +50,20 @@ export default {
 
             if ( type === 'hex' ) {
 
-                return [ { k: 'HEX', v: '#' + this.val.getHexString() } ];
+                let hex = this.val.getHexString();
+
+                if ( this.hexSize === 3 && ( hex[ 0 ] === hex[ 1 ] && hex[ 2 ] === hex[ 3 ] && hex[ 4 ] === hex[ 5 ] ) ) {
+                    hex = hex[ 0 ] + hex[ 2 ] + hex[ 4 ];
+                }
+
+                return [ { k: 'HEX', v: '#' + hex } ];
 
             } else if ( type === 'rgba' ) {
 
                 return [
-                    { k: 'R', v: this.val.r },
-                    { k: 'G', v: this.val.g },
-                    { k: 'B', v: this.val.b },
+                    { k: 'R', v: Math.round( this.val.r * 255 ) },
+                    { k: 'G', v: Math.round( this.val.g * 255 ) },
+                    { k: 'B', v: Math.round( this.val.b * 255 ) },
                     { k: 'A', v: this.val.a },
                 ]
 
@@ -90,9 +73,9 @@ export default {
                 let a = this.val.getAlpha();
 
                 return [
-                    { k: 'H', v: hsl.h },
-                    { k: 'S', v: hsl.s },
-                    { k: 'L', v: hsl.l },
+                    { k: 'H', v: Math.round( hsl.h * 360 ) },
+                    { k: 'S', v: Math.round( hsl.s * 100 ) + '%' },
+                    { k: 'L', v: Math.round( hsl.l * 100 ) + '%' },
                     { k: 'A', v: a },
                 ]
             }
@@ -116,10 +99,81 @@ export default {
         update( e ) {
             this.handleChange( e.target.value )
         },
-        handleChange( newVal ) {
-            let data = {}
-            data[ this.label ] = newVal
-            this.$emit( 'on-change', data )
+        handleChange( key, e ) {
+
+            let value = e.target.value;
+
+            if ( key === 'HEX' ) {
+
+                let result = /^\#([A-Fa-f0-9]+)$/.exec( value );
+
+                if ( !result || result[ 1 ].length !== 3 && result[ 1 ].length !== 6 ) return;
+
+                this.hexSize = result[ 1 ].length;
+
+                this.val.setStyle( value );
+
+                this.$emit( 'input', this.val )
+
+            } else if ( [ 'R', 'G', 'B' ].find( item => item === key ) ) {
+
+                value = Number( value );
+
+                if ( isNaN( value ) ) return;
+
+                value = clamp( value, 0, 255 ) / 255;
+
+                let rgb = this.val;
+
+                rgb[ key.toLowerCase() ] = value;
+
+                this.val.setRGB( rgb.r, rgb.g, rgb.b );
+
+                this.$emit( 'input', this.val )
+
+            } else if ( [ 'H', 'S', 'L' ].find( item => item === key ) ) {
+
+                if ( key === 'H' ) {
+
+                    value = Number( value );
+
+                    if ( isNaN( value ) ) return;
+
+                    value = clamp( value, 0, 360 ) / 360;
+
+                } else {
+
+                    let result = /^(\d+)%$/.exec( value );
+
+                    if ( !result ) return;
+
+                    value = Number( result[ 1 ] );
+
+                    value = clamp( value, 0, 100 ) / 100;
+
+                }
+
+                let hsl = this.val.getHSL();
+
+                hsl[ key.toLowerCase() ] = value;
+
+                this.val.setHSL( hsl.h, hsl.s, hsl.l );
+
+                this.$emit( 'input', this.val )
+
+            } else if ( key === 'A' ) {
+
+                value = Number( value );
+
+                if ( isNaN( value ) ) return;
+
+                value = clamp( value, 0, 1 );
+
+                this.val.setAlpha( value )
+
+                this.$emit( 'input', this.val )
+
+            }
         },
         handleBlur( e ) {
             console.log( e )
@@ -150,6 +204,12 @@ export default {
             console.log( e )
         },
         changeType () {
+            let index = this.allowedTypes.findIndex( item => item === this.type );
+            if ( index >= 0 ) {
+                this.type = this.allowedTypes[ ( index + 1 ) % this.allowedTypes.length ]
+            } else {
+                this.type = this.allowedTypes[ 0 ];
+            }
             
         }
     }
@@ -186,7 +246,9 @@ export default {
             }
 
             .g-color-input {
+                font-family: Menlo, Consolas, monospace;
                 width: 100%;
+                font-size: 13px;
                 border: 1px solid #ccc;
                 border-radius: 3px;
                 height: 20px;

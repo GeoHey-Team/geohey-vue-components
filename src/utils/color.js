@@ -128,7 +128,19 @@ Object.assign( Color.prototype, {
         s = clamp( s, 0, 1 );
         v = clamp( v, 0, 1 );
 
-        this.setHSL( h, ( s * v ) / ( ( h = ( 2 - s ) * v ) < 1 ? h : ( 2 - h ) ), h * 0.5 );
+        var hsl = {};
+
+        hsl.h = h;
+        hsl.s = ( s * v ) / ( ( h = ( 2 - s ) * v ) < 1 ? h : ( 2 - h ) );
+        hsl.l = h * 0.5;
+
+        // TODO
+        if ( isNaN( hsl.s ) ) {
+            hsl.l -= 1e-6;
+            hsl.s = hsl.l + 1e-6;
+        }
+
+        this.setHSL( hsl.h, hsl.s, hsl.l );
 
         return this;
 
@@ -276,7 +288,11 @@ Object.assign( Color.prototype, {
 
     getHex: function () {
 
-        return ( this.r * 255 ) << 16 ^ ( this.g * 255 ) << 8 ^ ( this.b * 255 ) << 0;
+        let r = Math.round( this.r * 255 );
+        let g = Math.round( this.g * 255 );
+        let b = Math.round( this.b * 255 );
+
+        return r << 16 ^ g << 8 ^ b << 0;
 
     },
 
@@ -358,11 +374,33 @@ Object.assign( Color.prototype, {
 
     },
 
-    getStyle: function () {
+    getStyle: function ( format = 'rgba' ) {
 
-        // ( 3.6 | 0 ) -> 3
+        if ( format === 'hsl' || format === 'hsla' ) {
 
-        return `rgba( ${ ( this.r * 255 ) | 0 }, ${ ( this.g * 255 ) | 0 }, ${ ( this.b * 255 ) | 0 }, ${ this.a } )`;
+            let hsl = this.getHSL();
+
+            let hslStr = `${ Math.round( hsl.h * 360 ) }, ${ Math.round( hsl.s * 100 ) }%, ${ Math.round( hsl.l * 100 ) }%`;
+
+            if ( format === 'hsla' ) return `hsla( ${ hslStr }, ${ this.a } )`;
+
+            return `hsl( ${ hslStr } )`;
+
+        } else if ( format === 'rgb' || format === 'rgba' ) {
+
+            let rgbStr = `${ Math.round( this.r * 255 ) }, ${ Math.round( this.g * 255 ) }, ${ Math.round( this.b * 255 ) }`;
+
+            if ( format === 'rgba' ) return `rgba( ${ rgbStr }, ${ this.a } )`;
+
+            return `rgb( ${ rgbStr } )`;
+
+        } else if ( format === 'hex' ) {
+
+            return `#${ this.getHexString() }`;
+
+        }
+
+        return null;
 
     }
 

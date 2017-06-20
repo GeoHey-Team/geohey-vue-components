@@ -38,7 +38,7 @@ export default {
             !skip && e.preventDefault()
             var container = this.$refs.container
             var containerWidth = container.clientWidth
-            var left = ( e.pageX || e.touches[ 0 ].pageX ) - ( container.getBoundingClientRect().left + window.pageXOffset )
+            var left = ( e.touches ? e.touches[ 0 ].clientX : e.clientX ) - container.getBoundingClientRect().left
             var a
             if ( left < 0 ) {
                 a = 0

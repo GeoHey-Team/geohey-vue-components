@@ -9,7 +9,7 @@ export default {
     props: {
         size: {
             type: [ Number, String ],
-            default: 8
+            default: 5
         },
         white: {
             type: String,
@@ -17,7 +17,7 @@ export default {
         },
         grey: {
             type: String,
-            default: '#e6e6e6'
+            default: '#cfcfcf'
         }
     },
     computed: {
