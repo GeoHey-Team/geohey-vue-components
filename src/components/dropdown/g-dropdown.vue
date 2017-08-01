@@ -2,7 +2,7 @@
     <div class="g-select" :class="[ size, { 'is-disabled': disabled, 'focus': showList } ]" @click.stop>
         <div class="g-select-label-warp" @click="toggleList">
             <span>{{ currentName }}</span>
-            <i class="iconfont" :class="{
+            <i class="icon" :class="{
                     'icon-arrow-down': !showList,
                     'icon-arrow-up': showList
                 }"></i>

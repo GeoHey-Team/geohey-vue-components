@@ -8,7 +8,7 @@
             @mouseenter="clearTimer"
             @mouseleave="startTimer">
             <div class="g-message-group" :class="{ 'is-with-icon': !!type }">
-                <p><i class="g-message-icon iconfont" :class="iconCls"></i>{{ message }}</p>
+                <p><i class="g-message-icon icon" :class="iconCls"></i>{{ message }}</p>
             </div>
         </div>
     </transition>
@@ -127,6 +127,7 @@ export default {
         overflow: hidden;
 
         > p {
+            margin: 0;
             font-size: $fontSizeBase;
         }
 

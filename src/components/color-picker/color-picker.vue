@@ -20,7 +20,7 @@
         <div class="g-color-fields">
             <color-values v-model="color"></color-values>
         </div>
-        <div class="g-color-presets">
+        <div class="g-color-presets" v-if="!hidePreset">
             <div class="g-color-presets-color-wrap" v-for="c in presetcolor" @click="handlePreset(c)">
                 <div class="g-color-presets-color" :style="{ background: c }"></div>
                 <checkboard></checkboard>
@@ -39,32 +39,13 @@ import hue from './hue.vue'
 import alpha from './alpha.vue'
 
 const presetcolor = [
-    '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321',
-    '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2',
-    '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
+    '#f2f6f9', '#58B7FF', '#20A0FF', '#13CE66', '#F7BA2A', '#FF4949',
+    '#99A9BF', '#f78e3d', '#00a2ae', '#f5317f', '#4A90E2',
+    '#B8E986', '#000000', '#50E3C2', '#9B9B9B', '#FFFFFF'
 ]
 
-const colorChange = ( () => {
-
-    let color = c();
-
-    return value => {
-
-        if ( value && typeof value === 'object' ) {
-            color.setRGBA( ...value );
-        } else {
-            color.set( value );
-        }
-
-        return color;
-
-    }
-
-} )();
-
-
 export default {
-    name: 'color-picker',
+    name: 'g-color-picker',
     props: { 
         value: {
             default: '#fff'
@@ -72,6 +53,10 @@ export default {
         format: {
             type: String,
             default: 'rgba' // rgb, rgba, hsl, hsv, hex
+        },
+        hidePreset: {
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -83,7 +68,7 @@ export default {
     },
     data() {
         return {
-            val: colorChange( this.value ),
+            val: c( this.value ),
             presetcolor: presetcolor
         }
     },
@@ -142,7 +127,7 @@ export default {
     },
     watch: {
         value ( newVal ) {
-            this.val = colorChange( newVal )
+            this.colorChange( newVal )
         },
         val: {
             deep: true,
@@ -161,7 +146,15 @@ export default {
     },
     methods: {
         handlePreset( c ) {
-            this.color = colorChange( data )
+            this.colorChange( c )
+        },
+        colorChange ( value ) {
+
+            if ( value && typeof value === 'object' ) {
+                this.val.setRGBA( ...value );
+            } else {
+                this.val.set( value );
+            }
         }
     }
 }
@@ -171,6 +164,7 @@ export default {
 @import "common";
 
 .g-color {
+    @include reset;
     position: relative;
     width: 230px;
     box-sizing: initial;
@@ -178,8 +172,6 @@ export default {
     border-radius: 2px;
     box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);
     overflow: hidden;
-
-    @include reset;
 
     .g-color-saturation-wrap {
         width: 100%;

@@ -12,8 +12,8 @@
                 'is-loading': loading
             }
         ]">
-        <i class="iconfont icon-loading icon-pulse" v-if="loading"></i>
-        <i class="iconfont" :class="'icon-' + icon" v-if="icon && !loading"></i>
+        <i class="icon icon-loading icon-pulse" v-if="loading"></i>
+        <i class="icon" :class="'icon-' + icon" v-if="icon && !loading"></i>
         <span v-if="$slots.default"><slot></slot></span>
     </button>
 </template>
@@ -49,6 +49,7 @@ export default {
 
 <style lang="scss">
 @import 'common';
+
 .g-button {
     display: inline-block;
     white-space: nowrap;
@@ -62,7 +63,7 @@ export default {
     padding: 0 12px;
     height: 28px;
     line-height: 26px;
-
+    outline: none;
 
     &[class*=g-icon-]+span {
         margin-left: 5px;

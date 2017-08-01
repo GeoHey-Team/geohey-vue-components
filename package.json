@@ -1,9 +1,9 @@
 {
   "name": "geohey-vue-components",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "GeoHey Components",
   "author": "胡玖龙 <hujl@geohey.com>",
-  "private": true,
+  "main": "src/index.js",
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",

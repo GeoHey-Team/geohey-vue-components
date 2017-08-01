@@ -1,31 +1,170 @@
-$globalFontFamily: 'PingFang SC', "Helvetica Neue", Helvetica, "Microsoft YaHei", Arial, sans-serif;
-$title: 13px;
-$subtitle: 12px;
-
-$blue: #20A0FF;
-$lightBlue: #58B7FF;
-$darkBlue: #1D8CE0;
-
+// color
+$white: #fff;
+$black: #000;
 $mainColor: #273142;
+$primary: #20A0FF;
+$lightPrimary: #58B7FF;
+$darkPrimary: #1D8CE0;
+$zoomSplit: #dbdbdb;
 
+// type color
+$info: $primary;
 $warning: #fd9827;
 $success: #3dbf74;
 $danger: #d9534f;
 
+// font
+$globalFontFamily: 'PingFang SC', "Helvetica Neue", Helvetica, "Microsoft YaHei", Arial, sans-serif;
 
-$fontWhite: #fff;
-$fontBlack: rgba(10,18,32,.87);
+$fontSizeMini: 12px;
+$fontSizeSmall: 13px;
+$fontSizeMid: 14px;
+$fontSizeBase: $fontSizeMid; // 普通文本
+$fontSizeLarge: 16px;
+
+$fontWhite: $white;
+$fontBlack: #2c3e50;
 $fontGray: #889;
-$fontLight: rgba(9,17,32,.65);
+$fontBase: rgba(0, 0, 0, .65); // 主要文本颜色
 
-$bdGray: #ddd;
+// border
+$bdGray: #e6e9f0;
 $bdBlack: #333;
-
 $bdRadius: 3px;
 
-$bgWhite: #fff; 
+// background
+$bgPrimary: #f5f7fa;
+$bgWhite: #fff;
 $bgGray: #eee;
 $bgBlack: #333;
+$bgOption: #e8eef6;
+
+// padding
+$padding: 12px;
+
+.g-modal-wrapper  {
+    background: rgba( 0, 0, 0, .5 );
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: -20px;
+    text-align: center;
+
+    &.private {
+        position: absolute;
+    }
+
+    &.g-modal-fade-enter-active {
+        animation: g-modal-fade-in .3s
+    }
+
+    &.g-modal-fade-leave-active {
+        animation: g-modal-fade-out .3s
+    }
+
+    @keyframes g-modal-fade-in {
+        0% {
+            transform: translate3d(0, -20px, 0);
+            opacity: 0
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+            opacity: 1
+        }
+    }
+
+    @keyframes g-modal-fade-out {
+        0% {
+            transform: translate3d(0, 0, 0);
+            opacity: 1
+        }
+        100% {
+            transform: translate3d(0, -20px, 0);
+            opacity: 0
+        }
+    }
+
+    &::after {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        width: 0;
+        vertical-align: middle;
+    }
+
+    .g-modal {
+        text-align: left;
+        display: inline-block;
+        vertical-align: middle;
+        background-color: $bgWhite;
+        border: 1px solid #c2c7d1;
+        box-shadow: 0 4px 10px 1px rgba(48,59,70,0.20);
+        border-radius: 4px;
+        position: relative;
+
+        .g-modal-header {
+            height: 60px;
+            line-height: 60px;
+            font-size: 18px;
+            color: $fontBlack;
+            padding: 0 20px;
+            border-bottom: 1px solid $bdGray;
+
+            > i {
+                float: right;
+                line-height: 20px;
+                margin-top: 20px;
+                cursor: pointer;
+
+                &:hover {
+                    color: $primary;
+                }
+            }
+        }
+
+        .g-modal-content {
+            padding: 20px;
+        }
+
+        .g-modal-footer {
+            padding: 0 20px 20px;
+        }
+    }
+}
+
+.g-global-popup {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .5;
+    background: #000;
+
+    &.private {
+        position: absolute;
+    }
+
+    &.g-global-popup-enter {
+        animation: g-global-popup-in .2s ease;
+    }
+    &.g-global-popup-leave {
+        animation: g-global-popup-out .2s ease forwards;
+    }
+
+    @keyframes g-global-popup-in {
+        0% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes g-global-popup-out {
+        100% {
+            opacity: 0;
+        }
+    }
+}
 
 @mixin reset {
 

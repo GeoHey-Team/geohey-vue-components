@@ -4,12 +4,12 @@
         <div class="g-message-box" :class="customClass">
             <div class="g-message-box-header" v-if="title !== undefined">
                 <div class="g-message-box-title">{{ title || '提示' }}</div>
-                <i class="g-message-box-close iconfont icon-close"
+                <i class="g-message-box-close icon icon-close"
                     :class="{ 'is-disabled': this.cancelButtonDisabled }" @click="handleAction('cancel')" v-if="showClose"></i>
             </div>
             <div class="g-message-box-content" v-if="message !== ''">
                 <div class="g-message-box-status" v-if="typeClass" :class="type">
-                    <i class="iconfont" :class="typeClass"></i>
+                    <i class="icon" :class="typeClass"></i>
                 </div>
                 <div class="g-message-box-message" :style="{ 'margin-left': typeClass ? '50px' : '0' }">
                     <slot><p>{{ message }}</p></slot>
@@ -43,7 +43,7 @@
 
 <script type="text/babel">
 import Popup from '@/utils/popup';
-import GButton from '@/components/common/g-button';
+import GButton from '@/components/button';
 import { addClass, removeClass } from '@/utils/dom';
 
 let typeMap = {
