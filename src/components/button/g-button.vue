@@ -12,8 +12,8 @@
                 'is-loading': loading
             }
         ]">
-        <i class="iconfont icon-loading icon-pulse" v-if="loading"></i>
-        <i class="iconfont" :class="'icon-' + icon" v-if="icon && !loading"></i>
+        <i class="icon icon-loading icon-pulse" v-if="loading"></i>
+        <i class="icon" :class="'icon-' + icon" v-if="icon && !loading"></i>
         <span v-if="$slots.default"><slot></slot></span>
     </button>
 </template>

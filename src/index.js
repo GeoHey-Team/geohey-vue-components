@@ -1,6 +1,9 @@
+import './assets/icon/iconfont.css'
 import Breadcrumb from './components/breadcrumb'
 import Button from './components/button'
+import ColorBar from './components/color-bar'
 import ColorPicker from './components/color-picker'
+import ColorBarPicker from './components/color-bar-picker'
 import Dropdown from './components/dropdown'
 import Input from './components/input'
 import Message from './components/message'
@@ -11,7 +14,9 @@ import Scrollbar from './components/scrollbar'
 const components = [
     Breadcrumb,
     Button,
+    ColorBar,
     ColorPicker,
+    ColorBarPicker,
     // Dropdown,
     Input,
     Message,
@@ -39,14 +44,16 @@ if ( typeof window !== 'undefined' && window.Vue ) {
 };
 
 export {
-	install,
-    Breadcrumb,
+    install,
+	Breadcrumb,
     Button,
+    ColorBar,
     ColorPicker,
-    Dropdown,
+    ColorBarPicker,
+    // Dropdown,
     Input,
     Message,
     MessageBox,
     Notification,
-    Scrollbar
+    // Scrollbar
 };

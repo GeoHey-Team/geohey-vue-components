@@ -6,7 +6,7 @@
                 <p class="g-color-label">{{ item.k }}</p>
             </div>
         </div>
-        <button class="g-color-values-change" @click="changeType">--</button>
+        <button class="g-color-values-change" @click="changeType"><i class="icon icon-up-down"></i></button>
     </div>
 </template>
 
