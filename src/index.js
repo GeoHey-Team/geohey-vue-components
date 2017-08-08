@@ -1,4 +1,4 @@
-import './assets/icon/iconfont.css'
+import '../static/icon/iconfont.css'
 import Breadcrumb from './components/breadcrumb'
 import Button from './components/button'
 import ColorBar from './components/color-bar'
@@ -25,6 +25,17 @@ const components = [
     // Scrollbar
 ];
 
+const GlobalComponents = {
+    install ( Vue, opts = {} ) {
+        Vue.prototype.$msgbox = MessageBox;
+        Vue.prototype.$alert = MessageBox.alert;
+        Vue.prototype.$confirm = MessageBox.confirm;
+        Vue.prototype.$prompt = MessageBox.prompt;
+        Vue.prototype.$notify = Notification;
+        Vue.prototype.$message = Message;
+    }
+}
+
 const install = function ( Vue, opts = {} ) {
 
     components.map( component => {
@@ -39,12 +50,13 @@ const install = function ( Vue, opts = {} ) {
     Vue.prototype.$message = Message;
 };
 
-if ( typeof window !== 'undefined' && window.Vue ) {
-    install( window.Vue );
-};
+// if ( typeof window !== 'undefined' && window.Vue ) {
+//     install( window.Vue );
+// };
 
 export {
     install,
+    GlobalComponents,
 	Breadcrumb,
     Button,
     ColorBar,
@@ -56,4 +68,4 @@ export {
     MessageBox,
     Notification,
     // Scrollbar
-};
+}
