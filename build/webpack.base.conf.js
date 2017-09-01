@@ -37,10 +37,6 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('example'),]
       },
       {
-        test: /\.css$/,
-        loader: 'css-loader'
-      },
-      {
         test: /\.(png|jpe?g|gif)(\?.*)?$/,
         loader: 'url-loader',
         options: {

@@ -4,11 +4,16 @@
         <g-button @click="test1">message</g-button>
         <g-button @click="test2">alert</g-button>
         <g-button @click="test3">notify</g-button>
+        <g-button size="small">small</g-button>
+        <g-button size="normal">normal</g-button>
+        <g-button size="large">large</g-button>
         <g-color-bar-picker></g-color-bar-picker>
         <div class="color-bar-list">
             <g-color-bar :colors="colors"></g-color-bar>
             <g-color-bar gradient :colors="colors"></g-color-bar>
         </div>
+        <g-switch></g-switch>
+        <g-logo></g-logo>
     </div>
 </template>
 <script>

@@ -10,6 +10,8 @@ import Message from './components/message'
 import MessageBox from './components/message-box'
 import Notification from './components/Notification'
 import Scrollbar from './components/scrollbar'
+import Switch from './components/switch'
+import Logo from './components/logo'
 
 const components = [
     Breadcrumb,
@@ -22,7 +24,9 @@ const components = [
     Message,
     MessageBox,
     Notification,
-    // Scrollbar
+    // Scrollbar,
+    Switch,
+    Logo
 ];
 
 const GlobalComponents = {
@@ -67,5 +71,7 @@ export {
     Message,
     MessageBox,
     Notification,
-    // Scrollbar
+    // Scrollbar,
+    Switch,
+    Logo
 }

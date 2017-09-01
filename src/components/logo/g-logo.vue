@@ -42,11 +42,12 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 @import 'common';
 
 .g-logo {
+    @include reset;
     width: 68px;
     height: 68px;
 
@@ -84,7 +85,7 @@ export default {
             z-index: 10;
             top: 50%;
             left: 50%;
-            @include translate( -50%, -50% );
+            transform: translate(-50%, -50%);
             width: 24px;
             height: 24px;
             transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1);
