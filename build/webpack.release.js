@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === 'production') {
       }
     }),
     new ExtractTextPlugin({
-      filename: 'style.css'
+      filename: 'geohey-vue-components.css'
     }),
   ]
 }

@@ -1,12 +1,12 @@
 <template>
-    <div class="g-color-saturation" 
+    <div class="g-color-picker-saturation" 
         :style="{ background: bgColor }" 
         ref="container" 
         @mousedown="handleMouseDown">
-        <div class="g-color-saturation-white"></div>
-        <div class="g-color-saturation-black"></div>
-        <div class="g-color-saturation-pointer" :style="{top: pointerTop, left: pointerLeft}">
-            <div class="g-color-saturation-circle"></div>
+        <div class="g-color-picker-saturation-white"></div>
+        <div class="g-color-picker-saturation-black"></div>
+        <div class="g-color-picker-saturation-pointer" :style="{top: pointerTop, left: pointerLeft}">
+            <div class="g-color-picker-saturation-circle"></div>
         </div>
     </div>
 </template>
@@ -84,9 +84,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.g-color-saturation,
-.g-color-saturation-white,
-.g-color-saturation-black {
+.g-color-picker-saturation,
+.g-color-picker-saturation-white,
+.g-color-picker-saturation-black {
     cursor: pointer;
     position: absolute;
     top: 0;
@@ -94,17 +94,17 @@ export default {
     right: 0;
     bottom: 0;
 }
-.g-color-saturation-white {
+.g-color-picker-saturation-white {
     background: linear-gradient(to right, #fff, rgba(255,255,255,0));
 }
-.g-color-saturation-black {
+.g-color-picker-saturation-black {
     background: linear-gradient(to top, #000, rgba(0,0,0,0));
 }
-.g-color-saturation-pointer {
+.g-color-picker-saturation-pointer {
     cursor: pointer;
     position: absolute;
 }
-.g-color-saturation-circle {
+.g-color-picker-saturation-circle {
     cursor: head;
     width: 10px;
     height: 10px;

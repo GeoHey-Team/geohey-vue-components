@@ -1,28 +1,28 @@
 <template>
-    <div class="g-color" @click.stop>
-        <div class="g-color-saturation-wrap">
+    <div class="g-color-picker" @click.stop>
+        <div class="g-color-picker-saturation-wrap">
             <saturation v-model="hsv"></saturation>
         </div>
-        <div class="g-color-controls">
-            <div class="g-color-sliders">
-                <div class="g-color-hue-wrap">
+        <div class="g-color-picker-controls">
+            <div class="g-color-picker-sliders">
+                <div class="g-color-picker-hue-wrap" :class="{ 'single': hideAlpha }">
                     <hue v-model="hsv"></hue>
                 </div>
-                <div class="g-color-alpha-wrap">
+                <div class="g-color-picker-alpha-wrap" v-if="!hideAlpha">
                     <alpha v-model="rgba"></alpha>
                 </div>
             </div>
-            <div class="g-color-color-wrap">
+            <div class="g-color-picker-color-wrap">
                 <checkboard></checkboard>
-                <div class="g-color-active-color" :style="{background: activeColor}"></div>
+                <div class="g-color-picker-active-color" :style="{background: activeColor}"></div>
             </div>
         </div>
-        <div class="g-color-fields">
+        <div class="g-color-picker-fields">
             <color-values v-model="color"></color-values>
         </div>
-        <div class="g-color-presets" v-if="!hidePreset">
-            <div class="g-color-presets-color-wrap" v-for="c in presetcolor" @click="handlePreset(c)">
-                <div class="g-color-presets-color" :style="{ background: c }"></div>
+        <div class="g-color-picker-presets" v-if="!hidePreset">
+            <div class="g-color-picker-presets-color-wrap" v-for="c in presetcolor" @click="handlePreset(c)">
+                <div class="g-color-picker-presets-color" :style="{ background: c }"></div>
                 <checkboard></checkboard>
             </div>
         </div>
@@ -54,6 +54,10 @@ export default {
             type: String,
             default: 'rgba' // rgb, rgba, hsl, hsv, hex
         },
+        hideAlpha: {
+            type: Boolean,
+            default: false
+        },
         hidePreset: {
             type: Boolean,
             default: false
@@ -67,6 +71,8 @@ export default {
         colorValues
     },
     data() {
+        console.log( this.value )
+        console.log( c(  this.value)  )
         return {
             val: c( this.value ),
             presetcolor: presetcolor
@@ -163,8 +169,7 @@ export default {
 <style lang="scss">
 @import "common";
 
-.g-color {
-    @include reset;
+.g-color-picker {
     position: relative;
     width: 230px;
     box-sizing: initial;
@@ -173,32 +178,36 @@ export default {
     box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);
     overflow: hidden;
 
-    .g-color-saturation-wrap {
+    .g-color-picker-saturation-wrap {
         width: 100%;
         height: 150px;
         position: relative;
         overflow: hidden;
     }
 
-    .g-color-controls {
+    .g-color-picker-controls {
         position: relative;
         padding: 10px 44px 10px 10px;
 
-        .g-color-sliders {
+        .g-color-picker-sliders {
             padding: 4px 0;
 
-            .g-color-hue-wrap {
+            .g-color-picker-hue-wrap {
                 position: relative;
                 height: 10px;
+
+                &.single {
+                    margin: 7px 0;
+                }
             }
-            .g-color-alpha-wrap {
+            .g-color-picker-alpha-wrap {
                 position: relative;
                 height: 10px;
                 margin-top: 4px;
             }
         }
 
-        .g-color-color-wrap {
+        .g-color-picker-color-wrap {
             width: 24px;
             height: 24px;
             position: absolute;
@@ -208,7 +217,7 @@ export default {
             margin-left: 4px;
             border-radius: 3px;
 
-            .g-color-active-color {
+            .g-color-picker-active-color {
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -221,12 +230,12 @@ export default {
         }
     }
 
-    .g-color-presets {
+    .g-color-picker-presets {
         padding: 10px;
         border-top: 1px solid #ddd;
         text-align: left;
 
-        .g-color-presets-color-wrap {
+        .g-color-picker-presets-color-wrap {
             border-radius: 2px;
             overflow: hidden;
             position: relative;
@@ -237,7 +246,7 @@ export default {
             width: 16px;
             height: 16px;
 
-            .g-color-presets-color {
+            .g-color-picker-presets-color {
                 width: 100%;
                 height: 100%;
                 position: absolute;

@@ -148,7 +148,7 @@ Object.assign( Color.prototype, {
 
     setStyle: function ( style ) {
 
-        function handleAlpha( string ) {
+        const handleAlpha = string => {
 
             if ( string === undefined ) return;
 
@@ -401,6 +401,18 @@ Object.assign( Color.prototype, {
         }
 
         return null;
+
+    },
+
+
+    lerp: function ( color, alpha ) {
+
+        this.r += ( color.r - this.r ) * alpha;
+        this.g += ( color.g - this.g ) * alpha;
+        this.b += ( color.b - this.b ) * alpha;
+        this.a += ( color.a - this.a ) * alpha;
+
+        return this;
 
     }
 

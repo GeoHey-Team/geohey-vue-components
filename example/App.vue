@@ -1,19 +1,21 @@
 <template>
     <div id="app">
         <g-color-picker></g-color-picker>
+        <g-color-picker hideAlpha></g-color-picker>
         <g-button @click="test1">message</g-button>
         <g-button @click="test2">alert</g-button>
         <g-button @click="test3">notify</g-button>
         <g-button size="small">small</g-button>
         <g-button size="normal">normal</g-button>
         <g-button size="large">large</g-button>
-        <g-color-bar-picker></g-color-bar-picker>
+        <g-color-bar-picker :breaks="10" type="alpha"></g-color-bar-picker>
         <div class="color-bar-list">
             <g-color-bar :colors="colors"></g-color-bar>
             <g-color-bar gradient :colors="colors"></g-color-bar>
         </div>
         <g-switch></g-switch>
         <g-logo></g-logo>
+        <g-slider range v-model="arr" show-tooltip></g-slider>
     </div>
 </template>
 <script>
@@ -27,6 +29,7 @@ export default {
     data() {
         return {
             colors: [ '#f3e79b', '#fac484', '#f8a07e', '#eb7f86', '#ce6693', '#a059a0', '#5c53a5' ],
+            arr: [ 10, 20 ]
         }
     },
     methods: {

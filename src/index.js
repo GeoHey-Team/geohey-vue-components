@@ -1,3 +1,4 @@
+import './assets/styles/reset.scss'
 import '../static/icon/iconfont.css'
 import Breadcrumb from './components/breadcrumb'
 import Button from './components/button'
@@ -12,6 +13,7 @@ import Notification from './components/Notification'
 import Scrollbar from './components/scrollbar'
 import Switch from './components/switch'
 import Logo from './components/logo'
+import Slider from './components/slider'
 
 const components = [
     Breadcrumb,
@@ -26,7 +28,8 @@ const components = [
     Notification,
     // Scrollbar,
     Switch,
-    Logo
+    Logo,
+    Slider
 ];
 
 const GlobalComponents = {
@@ -73,5 +76,6 @@ export {
     Notification,
     // Scrollbar,
     Switch,
-    Logo
+    Logo,
+    Slider
 }

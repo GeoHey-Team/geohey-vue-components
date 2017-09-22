@@ -1,12 +1,12 @@
 <template>
-    <div class="g-color-c-alpha">
-        <div class="g-color-c-alpha-checkboard-wrap">
+    <div class="g-color-picker-c-alpha" :class="[ size ]">
+        <div class="g-color-picker-c-alpha-checkboard-wrap">
             <checkboard></checkboard>
         </div>
-        <div class="g-color-c-alpha-gradient" :style="{ background: gradientColor }"></div>
-        <div class="g-color-c-alpha-container" ref="container" @mousedown="handleMouseDown" @touchmove="handleChange" @touchstart="handleChange">
-            <div class="g-color-c-alpha-pointer" :style="{left: rgba.a * 100 + '%'}">
-                <div class="g-color-c-alpha-picker"></div>
+        <div class="g-color-picker-c-alpha-gradient" :style="{ background: gradientColor }"></div>
+        <div class="g-color-picker-c-alpha-container" ref="container" @mousedown="handleMouseDown" @touchmove="handleChange" @touchstart="handleChange">
+            <div class="g-color-picker-c-alpha-pointer" :style="{left: rgba.a * 100 + '%'}">
+                <div class="g-color-picker-c-alpha-picker"></div>
             </div>
         </div>
     </div>
@@ -18,7 +18,8 @@ import checkboard from './checkboard.vue'
 export default {
     name: 'Alpha',
     props: {
-        value: Object
+        value: Object,
+        size: String
     },
     components: {
         checkboard
@@ -74,39 +75,41 @@ export default {
 </script>
 
 <style lang="scss">
-.g-color-c-alpha {
+.g-color-picker-c-alpha {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.g-color-picker-c-alpha-checkboard-wrap {
     position: absolute;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
 }
-.g-color-c-alpha-checkboard-wrap {
+.g-color-picker-c-alpha-gradient {
     position: absolute;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
 }
-.g-color-c-alpha-gradient {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-}
-.g-color-c-alpha-container {
+.g-color-picker-c-alpha-container {
     cursor: pointer;
     position: relative;
     z-index: 2;
     height: 100%;
     margin: 0 3px;
 }
-.g-color-c-alpha-pointer {
+.g-color-picker-c-alpha-pointer {
     z-index: 2;
     position: absolute;
 }
-.g-color-c-alpha-picker {
+.g-color-picker-c-alpha-picker {
     cursor: pointer;
     width: 12px;
     height: 12px;
@@ -114,6 +117,12 @@ export default {
     box-shadow: 0 0 4px rgba(0, 0, 0, 1);
     background: #fff;
     margin-left: -6px;
-    margin-top: -1px;
+    margin-top: -2px;
+
+    .g-color-picker-c-alpha.small & {
+        height: 8px;
+        width: 8px;
+        margin-left: -4px;
+    }
 }
 </style>
