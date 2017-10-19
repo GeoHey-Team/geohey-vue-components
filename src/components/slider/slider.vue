@@ -2,8 +2,8 @@
     <div class="g-slider" @dragstart.prevent="" @click="onSliderClick">
         <div class="g-slider-runway" ref="slider"></div>
         <div class="g-slider-bar" :style="barStyle"></div>
-        <slider-button ref="buttonA" v-model="valA"></slider-button>
-        <slider-button v-if="range" ref="buttonB" v-model="valB"></slider-button>
+        <slider-button ref="buttonA" v-model="valA" @input="onChange"></slider-button>
+        <slider-button v-if="range" ref="buttonB" v-model="valB" @input="onChange"></slider-button>
     </div>
 </template>
 
@@ -63,9 +63,12 @@ export default {
             return parseInt( getStyle( this.$refs.slider, 'width' ), 10 );
         },
         barStyle () {
+            const left = this.range ? ( this.minVal - this.min ) / ( this.max - this.min ) * 100 : 0;
+            const right = ( this.maxVal - this.min ) / ( this.max - this.min ) * 100;
+
             return {
-                left: Math.min( this.valA, this.valB ) / ( this.max - this.min ) * 100 + '%',
-                width: Math.abs( this.valA - this.valB ) / ( this.max - this.min ) * 100 + '%'
+                left: Math.abs( left ) + '%',
+                right: 100 - Math.abs( right ) + '%'
             }
         },
         minVal () {
@@ -77,7 +80,9 @@ export default {
     },
     watch: {
         value ( val ) {
+
             if ( this.dragging ) return;
+
             if ( this.range ) {
                 this.valA = val[ 0 ];
                 this.valB = val[ 1 ];
@@ -86,17 +91,29 @@ export default {
             }
         },
         valA () {
+
+            if ( this.lazy ) return;
+
+            this.emit();
+
+        },
+        valB () {
+            if ( this.lazy ) return;
+
+            this.emit();
+
+        }
+    },
+    methods: {
+        emit () {
+
             if ( this.range ) {
                 this.$emit( 'input', [ this.minVal, this.maxVal ] );
             } else {
                 this.$emit( 'input', this.valA )
             }
+
         },
-        valB () {
-            this.$emit( 'input', [ this.minVal, this.maxVal ] );
-        }
-    },
-    methods: {
         onSliderClick ( event ) {
 
             const position = ( event.clientX - this.$refs.slider.getBoundingClientRect().left ) / this.sliderWidth * 100;
@@ -116,6 +133,12 @@ export default {
                 this.$refs.buttonA.setPosition( position );
             }
 
+        },
+        onChange () {
+
+            if ( this.lazy && this.dragging ) return;
+
+            this.emit();
         }
     }
 }
@@ -171,6 +194,7 @@ export default {
     .g-slider-tooltip {
         user-select: none;
         position: absolute;
+        left: 50%;
         border-radius: 4px;
         padding: 10px;
         z-index: 2000;
@@ -179,7 +203,7 @@ export default {
         background: #1f2d3d;
         color: #fff;
         transform: translateX( -50% );
-        margin-top: -48px;
+        margin-top: -44px;
 
         &::after {
             content: '';

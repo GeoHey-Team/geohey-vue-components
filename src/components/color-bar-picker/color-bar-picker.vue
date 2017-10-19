@@ -1,5 +1,5 @@
 <template>
-    <div class="color-bar-picker">
+    <div class="g-color-bar-picker">
         <div class="color-bar-panel-list" v-if="!editPanelVisible">
             <div class="color-bar-current" :class="[ type ]">
                 <color-bar :colors="selectedColors"></color-bar>
@@ -136,6 +136,13 @@ export default {
     },
     created () {
         this.colorBars = this.colorBuckets;
+
+        this.update();
+
+        if ( this.selected === -1 && this.customColors && this.customColors.length > 0 && this.breaks !== undefined ) {
+            this.customColors = gradient( this.customColors, this.breaks );
+            this.$emit( 'input', [ ...this.customColors ] );
+        }
     },
     computed: {
         colorBuckets () {
@@ -189,7 +196,12 @@ export default {
         },
         breaks ( val ) {
             this.colorBars = this.colorBuckets;
-            this.update();
+
+            if ( this.customColors && this.customColors.length > 0 ) {
+                this.customColors = gradient( this.customColors, this.breaks );
+            }
+            this.$emit( 'input', [ ...this.selectedColors ] );
+            // this.update();
         },
         value: {
             deep: true,
@@ -201,9 +213,12 @@ export default {
             this.a = this.alpha;
         },
         customColors ( val ) {
-            if ( val && this.selected === -1 && val.length > 0 ) {
-                // this.$emit( 'input', [ ...this.customColors ] )
+            if ( this.breaks !== undefined && val && val.length > 0 && val.length !== this.breaks ) {
+                this.customColors = gradient( this.customColors, this.breaks );
             }
+            // if ( val && this.selected === -1 && val.length > 0 ) {
+            //     // this.$emit( 'input', [ ...this.customColors ] )
+            // }
         }
     },
     methods: {
@@ -270,7 +285,7 @@ export default {
 <style lang="scss">
 @import 'common';
 
-.color-bar-picker {
+.g-color-bar-picker {
     width: 230px;
     position: relative;
     z-index: 10;

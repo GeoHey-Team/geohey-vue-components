@@ -4,7 +4,7 @@
         :class="{ dragging: dragging }"
         :style="offsetStyle"
         @mousedown.stop="onMouseDown">
-            <div class="g-slider-tooltip" :style="offsetStyle" v-if="showTooltip" v-show="dragging">
+            <div class="g-slider-tooltip" v-if="showTooltip" v-show="dragging">
                 <span>{{ formatedValue }}</span>
                 <div class="g-slider-arrow"></div>
             </div>
@@ -35,6 +35,9 @@ export default {
         };
     },
     computed: {
+        lazy () {
+            return this.$parent.lazy;
+        },
         min () {
             return this.$parent.min;
         },
@@ -43,9 +46,6 @@ export default {
         },
         step () {
             return this.$parent.step;
-        },
-        lazy () {
-            return this.$parent.lazy;
         },
         showTooltip () {
             return this.$parent.showTooltip;
@@ -94,7 +94,7 @@ export default {
         }
     },
     methods: {
-        setPosition ( newPosition, emit = true ) {
+        setPosition ( newPosition ) {
             if (newPosition === null) return;
             if (newPosition < 0) {
                 newPosition = 0;
@@ -108,9 +108,7 @@ export default {
 
             this.val = value;
 
-            if ( emit ) {
-                this.$emit( 'input', this.val );
-            }
+            this.$emit( 'input', this.val );
         },
     
         onMouseDown ( event ) {
@@ -125,12 +123,17 @@ export default {
         onMouseMove ( event ) {
 
             const diff = ( event.clientX - this.startX ) / this.sliderWidth * 100;
-            this.setPosition( this.startPosition + diff, !this.lazy )
+
+            this.setPosition( this.startPosition + diff )
 
         },
         onMouseUp ( event ) {
             this.dragging = false;
-            this.$emit( 'input', this.val );
+
+            setTimeout( () => {
+                this.$emit( 'input', this.val );
+            }, 0 )
+
             document.removeEventListener( 'mouseup', this.onMouseUp, false );
             document.removeEventListener( 'mousemove', this.onMouseMove, false );
         }

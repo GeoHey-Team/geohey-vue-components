@@ -11,7 +11,7 @@
 export default {
     name: 'Hue',
     props: {
-        value: Object    
+        value: Object 
     },
     computed: {
         hsv() {

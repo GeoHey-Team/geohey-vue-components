@@ -54,6 +54,10 @@ export default {
             type: String,
             default: 'rgba' // rgb, rgba, hsl, hsv, hex
         },
+        lazy: {
+            type: Boolean,
+            default: false
+        },
         hideAlpha: {
             type: Boolean,
             default: false
@@ -71,8 +75,6 @@ export default {
         colorValues
     },
     data() {
-        console.log( this.value )
-        console.log( c(  this.value)  )
         return {
             val: c( this.value ),
             presetcolor: presetcolor
@@ -138,19 +140,36 @@ export default {
         val: {
             deep: true,
             handler () {
-                let color;
-                let format = this.format;
-                if ( format === 'object' ) {
-                    color = this.val;
-                } else {
-                    color = this.val.getStyle( format );
+
+                if ( !this.lazy ) {
+                    this.emit();
+                    return;
                 }
-                this.$emit( 'on-change', color );
-                this.$emit( 'input', color );
+
+                if ( this._updateTimer ) {
+                    clearTimeout( this._updateTimer )
+                }
+
+                this._updateTimer = setTimeout( () => {
+                    this.emit();
+                    this._updateTimer = null;
+                }, 250 );
+
             }
         }
     },
     methods: {
+        emit() {
+            let color;
+            let format = this.format;
+            if ( format === 'object' ) {
+                color = this.val;
+            } else {
+                color = this.val.getStyle( format );
+            }
+            this.$emit( 'on-change', color );
+            this.$emit( 'input', color );
+        },
         handlePreset( c ) {
             this.colorChange( c )
         },
