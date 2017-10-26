@@ -21,6 +21,7 @@
 <script>
 
 export default {
+    name: 'g-dropdown',
     props: {
         value: {
             default: null
@@ -116,7 +117,7 @@ export default {
     }
 
     &.focus {
-        border: 1px solid #20a0ff;
+        border: 1px solid #20a0ff !important;
     }
 
     &.is-disabled {
@@ -136,19 +137,21 @@ export default {
         cursor: pointer;
 
         > i {
+            color: #bfcbd9;
             font-size: 14px;
             position: absolute;
             top: 50%;
             right: 8px;
             transform: translateY(-50%);
-            margin-top: 2px;
+            margin-top: 0;
         }
 
     }
 
     .g-select-list-warp {
         position: absolute;
-        top: 32px;
+        top: 30px;
+        line-height: 30px;
         left: 0;
         z-index: 100;
         background: #FFF;

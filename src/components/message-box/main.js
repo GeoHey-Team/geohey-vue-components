@@ -100,6 +100,7 @@ const showNextMsg = () => {
                 instance.modalAppendToBody = false;
                 instance.parent.appendChild( instance.$el );
             } else {
+                instance.modalAppendToBody = true;
                 document.body.appendChild( instance.$el );
             }
 
