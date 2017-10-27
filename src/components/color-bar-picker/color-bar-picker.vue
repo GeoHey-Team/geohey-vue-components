@@ -175,7 +175,15 @@ export default {
             },
             set ( val ) {
                 this.a = val.a;
-                this.$emit( 'input-alpha', this.alpha )
+
+                if ( this._alphaUpdateTimer ) {
+                    clearTimeout( this._alphaUpdateTimer )
+                }
+
+                this._alphaUpdateTimer = setTimeout( () => {
+                    this.$emit( 'input-alpha', this.a );
+                    this._alphaUpdateTimer = null;
+                }, 250 );
             }
         }
     },
