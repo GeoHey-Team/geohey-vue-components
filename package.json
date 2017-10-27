@@ -1,6 +1,6 @@
 {
   "name": "geohey-vue-components",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "GeoHey Components",
   "author": "胡玖龙 <hujl@geohey.com>",
   "main": "dist/geohey-vue-components.js",
