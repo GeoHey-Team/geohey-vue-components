@@ -7,7 +7,7 @@
                     <alpha v-model="alphaColor" size="small"></alpha>
                 </div>
             </div>
-            <div class="color-bar-list-box">
+            <div class="color-bar-list-box" @wheel.stop>
                 <g-scrollbar class="color-bar-list-wrapper">
                     <ul class="color-bar-list">
                         <li v-for="( colors, index ) in colorBars"
