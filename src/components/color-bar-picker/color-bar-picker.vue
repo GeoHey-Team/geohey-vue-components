@@ -176,14 +176,7 @@ export default {
             set ( val ) {
                 this.a = val.a;
 
-                if ( this._alphaUpdateTimer ) {
-                    clearTimeout( this._alphaUpdateTimer )
-                }
-
-                this._alphaUpdateTimer = setTimeout( () => {
-                    this.$emit( 'input-alpha', this.a );
-                    this._alphaUpdateTimer = null;
-                }, 250 );
+                this.emitAlpha();
             }
         }
     },
@@ -194,7 +187,8 @@ export default {
             colorBars: this.colorBuckets,
             selected: 0,
             edited: 0,
-            a: this.alpha
+            a: this.alpha,
+            _updateTimer: null
         }
     },
     watch: {
@@ -270,6 +264,16 @@ export default {
         edit () {
             this.customColors = [ ...this.selectedColors ];
             this.editPanelVisible = true;
+        },
+        emitAlpha () {
+            if ( this._updateTimer ) {
+                clearTimeout( this._updateTimer )
+            }
+
+            this._updateTimer = setTimeout( () => {
+                this.$emit( 'input-alpha', this.a );
+                this._updateTimer = null;
+            }, 250 );
         },
         cleanCustomColor () {
             this.selected = 0;
