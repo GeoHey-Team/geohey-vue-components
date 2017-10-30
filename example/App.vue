@@ -8,7 +8,7 @@
         <g-button size="small">small</g-button>
         <g-button size="normal">normal</g-button>
         <g-button size="large">large</g-button>
-        <g-color-bar-picker :breaks="10" type="alpha"></g-color-bar-picker>
+        <g-color-bar-picker v-model="colors1" @input="log" :breaks="5" type="alpha"></g-color-bar-picker>
         <div class="color-bar-list">
             <g-color-bar :colors="colors"></g-color-bar>
             <g-color-bar gradient :colors="colors"></g-color-bar>
@@ -28,11 +28,23 @@ export default {
     name: 'app',
     data() {
         return {
+            colors1: [ '#5182e4', '#ce62d6', '#9bcc66', '#8954d4', '#3fb27e' ],
             colors: [ '#f3e79b', '#fac484', '#f8a07e', '#eb7f86', '#ce6693', '#a059a0', '#5c53a5' ],
             arr: [ 10, 20 ]
         }
     },
+    watch: {
+        // colors1: {
+        //     deep: true,
+        //     handler( val ) {
+        //         console.log( val )
+        //     }
+        // }
+    },
     methods: {
+        log() {
+            console.log( 'change' )
+        },
         test1 () {
             this.$message( '1dasdsadasd' )
         },

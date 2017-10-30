@@ -139,7 +139,12 @@ export default {
 
         this.update();
 
-        if ( this.selected === -1 && this.customColors && this.customColors.length > 0 && this.breaks !== undefined ) {
+        if ( this.selected === -1 && 
+                this.customColors && 
+                this.customColors.length > 0 &&
+                this.breaks !== undefined &&
+                this.customColors.length !== this.breaks ) {
+
             this.customColors = gradient( this.customColors, this.breaks );
             this.$emit( 'input', [ ...this.customColors ] );
         }
