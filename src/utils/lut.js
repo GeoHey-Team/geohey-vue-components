@@ -69,8 +69,8 @@ Lut.prototype = {
 // colors: [ '#ff0', '#00f', ... ]
 const gradient = function ( colors, breaks ) {
     const colormap = colors.map( ( color, index ) => [ index, color ] )
-    const length = colors.length
-    const lut = new Lut( colormap, 0, length - 1 )
+    const length = colors.length - 1
+    const lut = new Lut( colormap, 0, length )
 
     const result = []
 
@@ -81,6 +81,8 @@ const gradient = function ( colors, breaks ) {
 
     return result;
 }
+
+// console.log( gradient( [ '#f00', '#fff' ], 4) )
 
 export { Lut, gradient }
 export default Lut;
