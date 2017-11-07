@@ -48,6 +48,7 @@ import Alpha from '../color-picker/alpha'
 import { gradient } from '@/utils/lut'
 import ColorPicker from '../color-picker'
 import Vue from 'vue'
+import c from '@/utils/color'
 
 const presetcolor = [
     [ '#5182e4', '#ce62d6', '#9bcc66', '#8954d4', '#3fb27e', '#5156b8', '#f7cb4a', '#51b4f1', '#f88d48', '#69d4db', '#f35352', '#d42d6b' ],
@@ -146,7 +147,7 @@ export default {
                 this.customColors.length !== this.breaks ) {
 
             this.customColors = gradient( this.customColors, this.breaks );
-            this.$emit( 'input', [ ...this.customColors ] );
+            this.$emit( 'input', this.formatColors( [ ...this.customColors ] ) );
         }
     },
     computed: {
@@ -207,7 +208,7 @@ export default {
             if ( this.customColors && this.customColors.length > 0 ) {
                 this.customColors = gradient( this.customColors, this.breaks );
             }
-            this.$emit( 'input', [ ...this.selectedColors ] );
+            this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) );
             // this.update();
         },
         value: {
@@ -229,6 +230,14 @@ export default {
         }
     },
     methods: {
+        formatColors( colors ) {
+
+            if ( this.type === 'alpha' ) {
+                return colors.map( color => c( color ).getStyle( 'hex' )  )
+            }
+            return colors;
+
+        },
         update () {
 
             let index = this.colorBars.findIndex( ( colors, index ) => {
@@ -256,7 +265,7 @@ export default {
         select ( index ) {
             if ( this.selected !== index ) {
                 this.selected = index;
-                this.$emit( 'input', [ ...this.selectedColors ] )
+                this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
             } else {
                 this.edit();
             }
@@ -264,7 +273,7 @@ export default {
         reverse ( index ) {
             this.selected = index;
             this.colorBars[ index ].reverse();
-            this.$emit( 'input', [ ...this.selectedColors ] )
+            this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         },
         edit () {
             this.customColors = [ ...this.selectedColors ];
@@ -293,7 +302,7 @@ export default {
         confirm () {
             this.selected = -1;
             this.editPanelVisible = false;
-            this.$emit( 'input', [ ...this.selectedColors ] )
+            this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         }
     }
 }

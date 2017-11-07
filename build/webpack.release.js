@@ -13,6 +13,23 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+baseWebpackConfig.module.rules.push( {
+    test: /\.css$/,
+    use: [
+        'style-loader',
+        'css-loader',
+        'autoprefixer-loader'
+    ]
+},
+{
+    test: /\.scss$/,
+    use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader?sourceMap'
+    ]
+} )
+
 
 module.exports = {
   entry: {
