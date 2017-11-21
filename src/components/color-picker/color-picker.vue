@@ -1,28 +1,28 @@
 <template>
-    <div class="g-color" @click.stop>
-        <div class="g-color-saturation-wrap">
+    <div class="g-color-picker" @click.stop>
+        <div class="g-color-picker-saturation-wrap">
             <saturation v-model="hsv"></saturation>
         </div>
-        <div class="g-color-controls">
-            <div class="g-color-sliders">
-                <div class="g-color-hue-wrap">
+        <div class="g-color-picker-controls">
+            <div class="g-color-picker-sliders">
+                <div class="g-color-picker-hue-wrap" :class="{ 'single': hideAlpha }">
                     <hue v-model="hsv"></hue>
                 </div>
-                <div class="g-color-alpha-wrap">
+                <div class="g-color-picker-alpha-wrap" v-if="!hideAlpha">
                     <alpha v-model="rgba"></alpha>
                 </div>
             </div>
-            <div class="g-color-color-wrap">
+            <div class="g-color-picker-color-wrap">
                 <checkboard></checkboard>
-                <div class="g-color-active-color" :style="{background: activeColor}"></div>
+                <div class="g-color-picker-active-color" :style="{background: activeColor}"></div>
             </div>
         </div>
-        <div class="g-color-fields">
+        <div class="g-color-picker-fields">
             <color-values v-model="color"></color-values>
         </div>
-        <div class="g-color-presets">
-            <div class="g-color-presets-color-wrap" v-for="c in presetcolor" @click="handlePreset(c)">
-                <div class="g-color-presets-color" :style="{ background: c }"></div>
+        <div class="g-color-picker-presets" v-if="!hidePreset">
+            <div class="g-color-picker-presets-color-wrap" v-for="c in presetcolor" @click="handlePreset(c)">
+                <div class="g-color-picker-presets-color" :style="{ background: c }"></div>
                 <checkboard></checkboard>
             </div>
         </div>
@@ -39,32 +39,13 @@ import hue from './hue.vue'
 import alpha from './alpha.vue'
 
 const presetcolor = [
-    '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321',
-    '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2',
-    '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
+    '#f2f6f9', '#58B7FF', '#20A0FF', '#13CE66', '#F7BA2A', '#FF4949',
+    '#99A9BF', '#f78e3d', '#00a2ae', '#f5317f', '#4A90E2',
+    '#B8E986', '#000000', '#50E3C2', '#9B9B9B', '#FFFFFF'
 ]
 
-const colorChange = ( () => {
-
-    let color = c();
-
-    return value => {
-
-        if ( value && typeof value === 'object' ) {
-            color.setRGBA( ...value );
-        } else {
-            color.set( value );
-        }
-
-        return color;
-
-    }
-
-} )();
-
-
 export default {
-    name: 'color-picker',
+    name: 'g-color-picker',
     props: { 
         value: {
             default: '#fff'
@@ -72,6 +53,18 @@ export default {
         format: {
             type: String,
             default: 'rgba' // rgb, rgba, hsl, hsv, hex
+        },
+        lazy: {
+            type: Boolean,
+            default: false
+        },
+        hideAlpha: {
+            type: Boolean,
+            default: false
+        },
+        hidePreset: {
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -83,7 +76,7 @@ export default {
     },
     data() {
         return {
-            val: colorChange( this.value ),
+            val: c( this.value ),
             presetcolor: presetcolor
         }
     },
@@ -142,26 +135,51 @@ export default {
     },
     watch: {
         value ( newVal ) {
-            this.val = colorChange( newVal )
+            this.colorChange( newVal )
         },
         val: {
             deep: true,
             handler () {
-                let color;
-                let format = this.format;
-                if ( format === 'object' ) {
-                    color = this.val;
-                } else {
-                    color = this.val.getStyle( format );
+
+                if ( !this.lazy ) {
+                    this.emit();
+                    return;
                 }
-                this.$emit( 'on-change', color );
-                this.$emit( 'input', color );
+
+                if ( this._updateTimer ) {
+                    clearTimeout( this._updateTimer )
+                }
+
+                this._updateTimer = setTimeout( () => {
+                    this.emit();
+                    this._updateTimer = null;
+                }, 250 );
+
             }
         }
     },
     methods: {
+        emit() {
+            let color;
+            let format = this.format;
+            if ( format === 'object' ) {
+                color = this.val;
+            } else {
+                color = this.val.getStyle( format );
+            }
+            this.$emit( 'on-change', color );
+            this.$emit( 'input', color );
+        },
         handlePreset( c ) {
-            this.color = colorChange( data )
+            this.colorChange( c )
+        },
+        colorChange ( value ) {
+
+            if ( value && typeof value === 'object' ) {
+                this.val.setRGBA( ...value );
+            } else {
+                this.val.set( value );
+            }
         }
     }
 }
@@ -170,7 +188,7 @@ export default {
 <style lang="scss">
 @import "common";
 
-.g-color {
+.g-color-picker {
     position: relative;
     width: 230px;
     box-sizing: initial;
@@ -179,34 +197,36 @@ export default {
     box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);
     overflow: hidden;
 
-    @include reset;
-
-    .g-color-saturation-wrap {
+    .g-color-picker-saturation-wrap {
         width: 100%;
         height: 150px;
         position: relative;
         overflow: hidden;
     }
 
-    .g-color-controls {
+    .g-color-picker-controls {
         position: relative;
         padding: 10px 44px 10px 10px;
 
-        .g-color-sliders {
+        .g-color-picker-sliders {
             padding: 4px 0;
 
-            .g-color-hue-wrap {
+            .g-color-picker-hue-wrap {
                 position: relative;
                 height: 10px;
+
+                &.single {
+                    margin: 7px 0;
+                }
             }
-            .g-color-alpha-wrap {
+            .g-color-picker-alpha-wrap {
                 position: relative;
                 height: 10px;
                 margin-top: 4px;
             }
         }
 
-        .g-color-color-wrap {
+        .g-color-picker-color-wrap {
             width: 24px;
             height: 24px;
             position: absolute;
@@ -216,7 +236,7 @@ export default {
             margin-left: 4px;
             border-radius: 3px;
 
-            .g-color-active-color {
+            .g-color-picker-active-color {
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -229,12 +249,12 @@ export default {
         }
     }
 
-    .g-color-presets {
+    .g-color-picker-presets {
         padding: 10px;
         border-top: 1px solid #ddd;
         text-align: left;
 
-        .g-color-presets-color-wrap {
+        .g-color-picker-presets-color-wrap {
             border-radius: 2px;
             overflow: hidden;
             position: relative;
@@ -245,7 +265,7 @@ export default {
             width: 16px;
             height: 16px;
 
-            .g-color-presets-color {
+            .g-color-picker-presets-color {
                 width: 100%;
                 height: 100%;
                 position: absolute;

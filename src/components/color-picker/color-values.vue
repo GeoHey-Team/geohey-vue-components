@@ -1,12 +1,12 @@
 <template>
-    <div class="g-color-values">
-        <div class="g-color-value" :class="{ 'g-color-value-single': field.length === 1, 'g-color-value-multiple': field.length > 1 }">
-            <div class="g-color-input-group" v-for="item in field">
-                <input type="text" spellcheck="false" class="g-color-input" :value="item.v" @input="handleChange( item.k, $event )">
-                <p class="g-color-label">{{ item.k }}</p>
+    <div class="g-color-picker-values">
+        <div class="g-color-picker-value" :class="{ 'g-color-picker-value-single': field.length === 1, 'g-color-picker-value-multiple': field.length > 1 }">
+            <div class="g-color-picker-input-group" v-for="item in field">
+                <input type="text" spellcheck="false" class="g-color-picker-input" :value="item.v" @input="handleChange( item.k, $event )">
+                <p class="g-color-picker-label">{{ item.k }}</p>
             </div>
         </div>
-        <button class="g-color-values-change" @click="changeType">--</button>
+        <button class="g-color-picker-values-change" @click="changeType"><i class="icon icon-up-down"></i></button>
     </div>
 </template>
 
@@ -220,19 +220,19 @@ export default {
 <style lang="scss">
 @import 'common';
 
-.g-color-values {
+.g-color-picker-values {
     width: 100%;
     padding: 10px 44px 10px 10px;
     position: relative;
 
-    .g-color-value {
+    .g-color-picker-value {
         width: 100%;
 
         &::after {
             @include clearfix;
         }
 
-        .g-color-input-group {
+        .g-color-picker-input-group {
             padding: 0 3px;
             text-align: center;
             float: left;
@@ -245,7 +245,7 @@ export default {
                 padding-right: 0;
             }
 
-            .g-color-input {
+            .g-color-picker-input {
                 font-family: Menlo, Consolas, monospace;
                 width: 100%;
                 font-size: 13px;
@@ -255,7 +255,7 @@ export default {
                 text-align: center;
             }
 
-            .g-color-label {
+            .g-color-picker-label {
                 color: #999;
                 font-size: 13px;
                 height: 22px;
@@ -263,22 +263,22 @@ export default {
             }
         }
 
-        &.g-color-value-multiple {
+        &.g-color-picker-value-multiple {
 
-            .g-color-input-group {
+            .g-color-picker-input-group {
                 width: 25%;
             }
         }
 
-        &.g-color-value-single {
+        &.g-color-picker-value-single {
 
-            .g-color-input-group {
+            .g-color-picker-input-group {
                 width: 100%;
             }
         }
     }
 
-    .g-color-values-change {
+    .g-color-picker-values-change {
         width: 24px;
         height: 24px;
         position: absolute;
@@ -288,6 +288,7 @@ export default {
         background: #fff;
         transition: background .3s;
         cursor: pointer;
+        border: 0;
 
         &:hover {
             background: #ddd;

@@ -3,6 +3,7 @@ var path = require('path')
 var config = require('../config')
 var utils = require('./utils')
 var webpack = require("webpack")
+var merge = require('webpack-merge')
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 var projectRoot = path.resolve(__dirname, '../')
 var baseWebpackConfig = require('./webpack.base.conf')
@@ -11,6 +12,24 @@ var vueLoaderConfig = require('./vue-loader.conf')
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
+
+baseWebpackConfig.module.rules.push( {
+    test: /\.css$/,
+    use: [
+        'style-loader',
+        'css-loader',
+        'autoprefixer-loader'
+    ]
+},
+{
+    test: /\.scss$/,
+    use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader?sourceMap'
+    ]
+} )
+
 
 module.exports = {
   entry: {
@@ -30,20 +49,8 @@ module.exports = {
     library: 'GeoHeyVueComponents',
     libraryTarget: 'umd'
   },
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('src')]
-      }
-    ]
-  }
+  resolve: baseWebpackConfig.resolve,
+  module: baseWebpackConfig.module
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -61,7 +68,7 @@ if (process.env.NODE_ENV === 'production') {
       }
     }),
     new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].[contenthash].css')
+      filename: 'geohey-vue-components.css'
     }),
   ]
 }

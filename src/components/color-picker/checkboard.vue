@@ -1,5 +1,5 @@
 <template>
-    <div class="g-color-c-checkerboard" :style="{background: bgStyle}"></div>
+    <div class="g-color-picker-c-checkerboard" :style="{background: bgStyle}"></div>
 </template>
 
 <script>
@@ -73,7 +73,7 @@ function getCheckboard( c1, c2, size ) {
 </script>
 
 <style lang="scss">
-.g-color-c-checkerboard {
+.g-color-picker-c-checkerboard {
     position: absolute;
     top: 0px;
     right: 0px;

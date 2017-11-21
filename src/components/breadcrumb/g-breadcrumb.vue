@@ -6,7 +6,7 @@
                     <span>{{ path }}</span>
                 </div>
                 <div class="g-breadcrumb-separator" v-if="index !== paths.length - 1">
-                    <i class="iconfont icon-arrow-right"></i>
+                    <i class="icon icon-arrow-right"></i>
                 </div>
             </template>
         </div>

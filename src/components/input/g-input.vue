@@ -8,7 +8,7 @@
             :value="val"
             @input="input"
             :placeholder="placeholder" :disabled="disabled">
-        <i class="g-input-icon iconfont" :class="'icon-' + icon" v-if="type !== 'textarea' && !!icon"></i>
+        <i class="g-input-icon icon" :class="'icon-' + icon" v-if="type !== 'textarea' && !!icon"></i>
     </div>
 </template>
 

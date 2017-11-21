@@ -11,6 +11,23 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
 var env = config.build.env
 
+baseWebpackConfig.module.rules.push( {
+    test: /\.css$/,
+    use: [
+        'style-loader',
+        'css-loader',
+        'autoprefixer-loader'
+    ]
+},
+{
+    test: /\.scss$/,
+    use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader?sourceMap'
+    ]
+} )
+
 var webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({

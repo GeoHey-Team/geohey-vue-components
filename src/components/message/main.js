@@ -60,7 +60,7 @@ Message.close = function ( id, userOnClose ) {
 };
 
 Message.closeAll = function () {
-    for ( let i = instances.length - 1; i >= 0; i- ) {
+    for ( let i = instances.length - 1; i >= 0; i-- ) {
         instances[ i ].close();
     }
 };

@@ -9,14 +9,14 @@
             @mouseleave="startTimer()"
             @click="click">
             <i
-                class="g-notification-icon iconfont"
+                class="g-notification-icon icon"
                 :class="typeClass"
                 v-if="type">
             </i>
             <div class="g-notification-group" :class="{ 'is-with-icon': typeClass || iconClass }">
                 <h2 class="g-notification-title" v-text="title"></h2>
                 <div class="g-notification-content"><slot>{{ message }}</slot></div>
-                <div class="g-notification-close iconfont icon-close" @click.stop="close"></div>
+                <div class="g-notification-close icon icon-close" @click.stop="close"></div>
             </div>
         </div>
     </transition>
