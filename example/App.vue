@@ -8,7 +8,9 @@
         <g-button size="small">small</g-button>
         <g-button size="normal">normal</g-button>
         <g-button size="large">large</g-button>
-        <g-color-bar-picker v-model="colors1" @input="log" :breaks="5" type="alpha"></g-color-bar-picker>
+        <input v-model="value"/>
+        <g-button size="large" @click="testBreaks">确定</g-button>
+        <g-color-bar-picker v-model="colors1" @input="log" :breaks="breaks" type="alpha"></g-color-bar-picker>
         <div class="color-bar-list">
             <g-color-bar :colors="colors"></g-color-bar>
             <g-color-bar gradient :colors="colors"></g-color-bar>
@@ -31,7 +33,9 @@ export default {
             // colors1: [ '#5182e4', '#ce62d6', '#9bcc66', '#8954d4', '#3fb27e' ],
             colors1: [ '#c00000', '#ffffff' ],
             colors: [ '#f3e79b', '#fac484', '#f8a07e', '#eb7f86', '#ce6693', '#a059a0', '#5c53a5' ],
-            arr: [ 10, 20 ]
+            arr: [ 10, 20 ],
+            breaks: 5,
+            value: 5
         }
     },
     watch: {
@@ -57,6 +61,9 @@ export default {
               title: '标题名称',
               message: '内容内容内容'
             } );
+        },
+        testBreaks (){
+            this.breaks = Number( this.value );
         }
     }
 }

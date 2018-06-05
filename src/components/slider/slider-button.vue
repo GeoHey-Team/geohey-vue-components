@@ -4,7 +4,7 @@
         :class="{ dragging: dragging }"
         :style="offsetStyle"
         @mousedown.stop="onMouseDown">
-            <div class="g-slider-tooltip" v-if="showTooltip" v-show="dragging">
+            <div class="g-slider-tooltip" v-if="showTooltip">
                 <span>{{ formatedValue }}</span>
                 <div class="g-slider-arrow"></div>
             </div>

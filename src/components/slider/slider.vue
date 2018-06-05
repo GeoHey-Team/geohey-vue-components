@@ -188,6 +188,9 @@ export default {
             top: 1px;
             z-index: 2;
             margin-left: -8px;
+            .g-slider-tooltip {
+                display: block !important;
+            }
         }
     }
 
@@ -204,6 +207,7 @@ export default {
         color: #fff;
         transform: translateX( -50% );
         margin-top: -44px;
+        display: none;
 
         &::after {
             content: '';
