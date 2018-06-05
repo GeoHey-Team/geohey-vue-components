@@ -312,6 +312,7 @@ export default {
         },
         confirm () {
             this.selected = -1;
+            this.currentColors = null;
             this.editPanelVisible = false;
             this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         }
