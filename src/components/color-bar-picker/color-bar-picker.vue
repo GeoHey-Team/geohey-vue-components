@@ -154,7 +154,14 @@ export default {
         colorBuckets () {
             if ( this.breaks === undefined ) return this.colors;
 
-            return this.colors.map( item => gradient( item, this.breaks ) )
+            return this.colors.map( ( item, i ) => {
+
+                if( this.selected === i && this.currentColors ){
+                    return gradient( this.currentColors, this.breaks );
+                }else{
+                    return gradient( item, this.breaks );
+                }
+            } )
         },
         selectedColors () {
             if ( this.selected === -1 ) return this.customColors;
@@ -194,7 +201,8 @@ export default {
             selected: 0,
             edited: 0,
             a: this.alpha,
-            _updateTimer: null
+            _updateTimer: null,
+            currentColors: null
         }
     },
     watch: {
@@ -263,8 +271,10 @@ export default {
             }
         },
         select ( index ) {
+            
             if ( this.selected !== index ) {
                 this.selected = index;
+                this.currentColors = null;
                 this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
             } else {
                 this.edit();
@@ -273,6 +283,7 @@ export default {
         reverse ( index ) {
             this.selected = index;
             this.colorBars[ index ].reverse();
+            this.currentColors = this.colorBars[ index ];
             this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         },
         edit () {
@@ -301,6 +312,7 @@ export default {
         },
         confirm () {
             this.selected = -1;
+            this.currentColors = null;
             this.editPanelVisible = false;
             this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         }
