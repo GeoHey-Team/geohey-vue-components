@@ -168,38 +168,6 @@ $padding: 12px;
 
 @mixin reset {
 
-    margin: 0;
-    border: 0;
-    padding: 0;
-    box-sizing: border-box;
-
-    * {
-        margin: 0;
-        border: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    font-family: $globalFontFamily;
-    -webkit-font-smoothing: antialiased;
-
-    input,
-    textarea,
-    button,
-    select,
-    *[contenteditable=true] {
-        outline: none;
-    }
-
-    a {
-        text-decoration: none;
-    }
-
-    ul,
-    li {
-        list-style: none;
-    }
-
 }
 
 @mixin clearfix {

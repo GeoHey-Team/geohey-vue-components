@@ -5,9 +5,7 @@
                 @wheel="scroll" 
                 @touchstart="startDrag" 
                 @touchmove="onDrag" 
-                @touchend="stopDrag">
-                <slot></slot>
-        </div></div>
+                @touchend="stopDrag"><slot></slot></div></div>
         <vertical-scrollbar v-if="ready" 
             :area="{ height: scrollAreaHeight }" 
             :wrapper="{ height: scrollWrapperHeight }" 
@@ -15,8 +13,7 @@
             :dragging-from-parent="dragging" 
             :on-change-position="handleChangePosition" 
             :on-dragging="handleScrollbarDragging" 
-            :on-stop-drag="handleScrollbarStopDrag">
-        </vertical-scrollbar>
+            :on-stop-drag="handleScrollbarStopDrag"/>
         <horizontal-scrollbar v-if="ready" 
             :area="{ width: scrollAreaWidth }" 
             :wrapper="{ width: scrollWrapperWidth }" 
@@ -292,7 +289,7 @@ export default {
 }
 
 .g-scrollbar-area {
-    display: inline-block;
+    display: block;
     min-width: 100%;
 }
 

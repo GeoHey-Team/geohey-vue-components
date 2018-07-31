@@ -37,7 +37,7 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('example'),]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|gif)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
@@ -45,12 +45,12 @@ module.exports = {
         }
       },
       {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
         loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-        }
+        // options: {
+        //   limit: 10000,
+        //   name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+        // }
       }
     ]
   }

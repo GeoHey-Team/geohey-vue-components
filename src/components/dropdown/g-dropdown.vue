@@ -7,20 +7,29 @@
                     'icon-arrow-up': showList
                 }"></i>
         </div>
-        <div class="g-select-list-warp" v-show="showList">
-            <ul class="g-select-list">
-                <li class="g-select-list-item"
-                    v-for="option in options"
-                    :class="{ 'active': val === option || val === option.key }"
-                    @click="selectItem( option )"> {{ typeof option !== 'object' ? option : option.name }} </li>
-            </ul>
+        <div class="g-select-list-warp" v-show="showList" @wheel.stop>
+            <scrollbar :style="menuStyle">
+                <ul class="g-select-list" ref="list">
+                    <li class="g-select-list-item"
+                        v-for="option in options"
+                        :class="{ 'active': val === option || val === option.key }"
+                        :title="typeof option !== 'object' ? option : option.name"
+                        @click="selectItem( option )"> {{ typeof option !== 'object' ? option : option.name }} </li>
+                </ul>
+            </scrollbar>
         </div>
     </div>
 </template>
 
 <script>
+import { getSize } from '../../utils/dom'
+import Scrollbar from '../scrollbar'
 
 export default {
+    name: 'g-dropdown',
+    components: {
+        Scrollbar
+    },
     props: {
         value: {
             default: null
@@ -29,6 +38,10 @@ export default {
             type: Array
         },
         size: String,
+        menuMaxHeight: {
+            type: Number,
+            default: 300
+        },
         disabled: {
             type: Boolean,
             default: false
@@ -48,6 +61,14 @@ export default {
             } );
 
             return typeof selected === 'object' && selected.name ? selected.name : selected;
+        },
+        menuStyle () {
+            if ( this.menuMaxHeight && 26 * this.options.length + 12 > this.menuMaxHeight ) {
+                return {
+                    height: this.menuMaxHeight + 'px'
+                }
+            }
+            return {};
         }
     },
     watch: {
@@ -116,7 +137,7 @@ export default {
     }
 
     &.focus {
-        border: 1px solid #20a0ff;
+        border: 1px solid #20a0ff !important;
     }
 
     &.is-disabled {
@@ -136,25 +157,29 @@ export default {
         cursor: pointer;
 
         > i {
+            color: #bfcbd9;
             font-size: 14px;
             position: absolute;
             top: 50%;
             right: 8px;
             transform: translateY(-50%);
-            margin-top: 2px;
+            margin-top: 0;
         }
 
     }
 
     .g-select-list-warp {
         position: absolute;
-        top: 32px;
+        top: 30px;
+        line-height: 30px;
         left: 0;
         z-index: 100;
         background: #FFF;
         box-shadow: 0 0 6px 0 rgba(0,0,0,.1), 0 10px 12px 0 rgba(170,182,206,.36);
         padding: 6px 0;
         width: 100%;
+        overflow: hidden;
+        overflow-y: auto;
 
         .g-select-list {
             width: 100%;
@@ -167,6 +192,8 @@ export default {
                 color: rgba(10,18,32,.64);
                 cursor: pointer;
                 width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
 
                 &:hover {
                     color: rgba(10,18,32,.87);

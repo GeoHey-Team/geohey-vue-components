@@ -1,10 +1,13 @@
 <template>
-    <div class="color-bar-picker">
+    <div class="g-color-bar-picker">
         <div class="color-bar-panel-list" v-if="!editPanelVisible">
-            <div class="color-bar-current">
-                <color-bar :colors="selectedColors"></color-bar> 
+            <div class="color-bar-current" :class="[ type ]">
+                <color-bar :colors="selectedColors"></color-bar>
+                <div class="color-bar-alpha" v-if="type === 'alpha'">
+                    <alpha v-model="alphaColor" size="small"></alpha>
+                </div>
             </div>
-            <div class="color-bar-list-box">
+            <div class="color-bar-list-box" @wheel.stop>
                 <g-scrollbar class="color-bar-list-wrapper">
                     <ul class="color-bar-list">
                         <li v-for="( colors, index ) in colorBars"
@@ -17,8 +20,8 @@
                         </li>
                     </ul>
                 </g-scrollbar>
-                <div class="custom-color-bar">
-                    <div class="custom-color-bar-box" :class="{ 'active': selected === -1 }" @click="select( -1 )" v-if="customColors.length > 0">
+                <div class="custom-color-bar" v-show="customizable">
+                    <div class="custom-color-bar-box" :class="{ 'active': selected === -1 }" @click.stop="select( -1 )" v-if="customColors.length > 0">
                         <color-bar :colors="customColors"></color-bar>
                         <i class="color-bar-icon icon icon-close" @click.stop="cleanCustomColor"></i>
                     </div>
@@ -32,7 +35,7 @@
                 <div class="edit-pointer" :style="pointerStyle"></div>
                 <i class="color-bar-icon icon icon-check" @click="confirm"></i>
             </div>
-            <color-picker hide-preset :value="editedColor" @input="changeColor"></color-picker>
+            <color-picker hide-preset :value="editedColor" @input="changeColor" :hideAlpha="type === 'alpha' "></color-picker>
         </div>
     </div>
 </template>
@@ -40,11 +43,15 @@
 <script>
 import ColorBar from './color-bar'
 import GScrollbar from '../scrollbar'
+import Slider from '../slider'
+import Alpha from '../color-picker/alpha'
+import { gradient } from '@/utils/lut'
 import ColorPicker from '../color-picker'
 import Vue from 'vue'
+import c from '@/utils/color'
 
 const presetcolor = [
-    [ '#5182e4', '#ce62d6', '#9bcc66', '#8954d4', '#3fb27e', '#5156b8', '#f7cb4a', '#51b4f1', '#f88d48', '#69d4db', '#f35352', '#d42d6b' ], 
+    [ '#5182e4', '#ce62d6', '#9bcc66', '#8954d4', '#3fb27e', '#5156b8', '#f7cb4a', '#51b4f1', '#f88d48', '#69d4db', '#f35352', '#d42d6b' ],
     [ '#4a72c9',  '#4966b7',  '#33418e',  '#479ce2',  '#78a9f2',  '#7560bf',  '#a3ccf8',  '#47b8e2',  '#89a0d3',  '#6087bf' ], 
     [ '#006bc2', '#4d8cae', '#ff8500', '#72c8f2', '#0fa8e0', '#ffbf9a', '#2b5b75', '#b6d0de', '#324598', '#dce292', '#ad5600', '#80adc5' ], 
     [ '#a1cb80', '#8b736e', '#3d8a6f', '#739e90', '#ffcd5d', '#245443', '#c74a66', '#4294b8', '#42a4b8', '#75b55e' ], 
@@ -95,17 +102,67 @@ export default {
     components: {
         ColorBar,
         GScrollbar,
-        ColorPicker
+        ColorPicker,
+        Alpha,
+        Slider
     },
     props: {
+        type: {
+            type: String,
+            default: 'default'
+        },
+        customizable: {
+            type: Boolean,
+            default: true
+        },
+        colors: {
+            type: Array,
+            default () {
+                return presetcolor
+            }
+        },
+        breaks: {
+            type: Number
+        },
         value: {
             type: Array,
             default () {
                 return []
             }
+        },
+        alpha: {
+            type: Number,
+            default: 1
+        }
+    },
+    created () {
+        this.colorBars = this.colorBuckets;
+
+        this.update();
+
+        if ( this.selected === -1 && 
+                this.customColors && 
+                this.customColors.length > 0 &&
+                this.breaks !== undefined &&
+                this.customColors.length !== this.breaks ) {
+
+            this.customColors = gradient( this.customColors, this.breaks );
+            this.$emit( 'input', this.formatColors( [ ...this.customColors ] ) );
         }
     },
     computed: {
+        colorBuckets () {
+            if ( this.breaks === undefined ) return this.colors;
+
+            return this.colors.map( ( item, i ) => {
+
+                if( this.selected === i && this.currentColors ){
+                    return gradient( this.currentColors, this.breaks );
+                }else{
+                    return gradient( item, this.breaks );
+                }
+            } )
+        },
         selectedColors () {
             if ( this.selected === -1 ) return this.customColors;
             return this.colorBars[ this.selected ] || []
@@ -119,35 +176,76 @@ export default {
                 width: itemWidth + 'px',
                 left: 16 + this.edited * itemWidth + 'px'
             }
+        },
+        alphaColor: {
+            get () {
+                return {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: this.a
+                }
+            },
+            set ( val ) {
+                this.a = val.a;
+
+                this.emitAlpha();
+            }
         }
     },
     data () {
         return {
             customColors: [],
             editPanelVisible: false,
-            colorBars: presetcolor,
+            colorBars: this.colorBuckets,
             selected: 0,
             edited: 0,
-            // editedColor: null
+            a: this.alpha,
+            _updateTimer: null,
+            currentColors: null
         }
     },
-    // created () {
-    //     this.update();
-    // },
     watch: {
+        colors ( val ) {
+            this.colorBars = this.colorBuckets;
+            this.update();
+        },
+        breaks ( val ) {
+            this.colorBars = this.colorBuckets;
+
+            if ( this.customColors && this.customColors.length > 0 ) {
+                this.customColors = gradient( this.customColors, this.breaks );
+            }
+            this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) );
+            // this.update();
+        },
         value: {
             deep: true,
             handler () {
                 this.update();
             }
         },
+        alpha () {
+            this.a = this.alpha;
+        },
         customColors ( val ) {
-            if ( val && this.selected === -1 && val.length > 0 ) {
-                // this.$emit( 'input', [ ...this.customColors ] )
+            if ( this.breaks !== undefined && val && val.length > 0 && val.length !== this.breaks ) {
+                this.customColors = gradient( this.customColors, this.breaks );
             }
+            // if ( val && this.selected === -1 && val.length > 0 ) {
+            //     // this.$emit( 'input', [ ...this.customColors ] )
+            // }
         }
     },
     methods: {
+        formatColors( colors ) {
+
+            if ( this.type === 'alpha' ) {
+                return colors.map( color => c( color ).getStyle( 'hex' )  )
+            }
+            return colors;
+
+        },
         update () {
 
             let index = this.colorBars.findIndex( ( colors, index ) => {
@@ -173,9 +271,11 @@ export default {
             }
         },
         select ( index ) {
+            
             if ( this.selected !== index ) {
                 this.selected = index;
-                this.$emit( 'input', [ ...this.selectedColors ] )
+                this.currentColors = null;
+                this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
             } else {
                 this.edit();
             }
@@ -183,11 +283,22 @@ export default {
         reverse ( index ) {
             this.selected = index;
             this.colorBars[ index ].reverse();
-            this.$emit( 'input', [ ...this.selectedColors ] )
+            this.currentColors = this.colorBars[ index ];
+            this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         },
         edit () {
             this.customColors = [ ...this.selectedColors ];
             this.editPanelVisible = true;
+        },
+        emitAlpha () {
+            if ( this._updateTimer ) {
+                clearTimeout( this._updateTimer )
+            }
+
+            this._updateTimer = setTimeout( () => {
+                this.$emit( 'input-alpha', this.a );
+                this._updateTimer = null;
+            }, 250 );
         },
         cleanCustomColor () {
             this.selected = 0;
@@ -201,8 +312,9 @@ export default {
         },
         confirm () {
             this.selected = -1;
+            this.currentColors = null;
             this.editPanelVisible = false;
-            this.$emit( 'input', [ ...this.selectedColors ] )
+            this.$emit( 'input', this.formatColors( [ ...this.selectedColors ] ) )
         }
     }
 }
@@ -211,17 +323,11 @@ export default {
 <style lang="scss">
 @import 'common';
 
-.color-bar-picker {
-    @include reset;
+.g-color-bar-picker {
     width: 230px;
     position: relative;
     z-index: 10;
     box-shadow: 0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15);
-
-    position: absolute;
-    left: 200px;
-    top: 200px;
-
 
     .color-bar-icon {
         position: absolute;
@@ -244,6 +350,27 @@ export default {
             width: 100%;
             border-bottom: 1px solid #ddd;
             background: #f2f6f9;
+
+            &.alpha {
+                .color-bar {
+                    height: 26px;
+                    padding-bottom: 0;
+                }
+            }
+
+            .color-bar-alpha {
+                width: 100%;
+                height: 6px;
+                position: relative;
+                padding: 0 16px;
+                margin: 10px 0;
+
+                .g-color-picker-c-alpha {
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
         }
 
         .color-bar-list-box {

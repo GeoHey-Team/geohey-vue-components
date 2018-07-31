@@ -190,6 +190,7 @@ export default {
                     PopupManager.closeModal( this._popupId );
                     this._closing = false;
                 }
+                console.log( this.modalAppendToBody )
                 PopupManager.openModal( this._popupId, PopupManager.nextZIndex(), this.modalAppendToBody ? undefined : dom, props.modalClass, props.modalFade );
                 if ( props.lockScroll ) {
                     if ( !this.bodyOverflow ) {

@@ -1,8 +1,8 @@
 <template>
-    <div class="g-color-c-hue">
-        <div class="g-color-c-hue-container" ref="container" @mousedown="handleMouseDown" @touchmove="handleChange" @touchstart="handleChange">
-            <div class="g-color-c-hue-pointer" :style="{left: pointerLeft}">
-                <div class="g-color-c-hue-picker"></div>
+    <div class="g-color-picker-c-hue">
+        <div class="g-color-picker-c-hue-container" ref="container" @mousedown="handleMouseDown" @touchmove="handleChange" @touchstart="handleChange">
+            <div class="g-color-picker-c-hue-pointer" :style="{left: pointerLeft}">
+                <div class="g-color-picker-c-hue-picker"></div>
             </div>
         </div>
     </div>
@@ -11,7 +11,7 @@
 export default {
     name: 'Hue',
     props: {
-        value: Object    
+        value: Object 
     },
     computed: {
         hsv() {
@@ -65,7 +65,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.g-color-c-hue {
+.g-color-picker-c-hue {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -73,21 +73,22 @@ export default {
     left: 0px;
     border-radius: 2px;
     background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.g-color-c-hue-container {
+.g-color-picker-c-hue-container {
     cursor: pointer;
     margin: 0 3px;
     position: relative;
     height: 100%;
 }
 
-.g-color-c-hue-pointer {
+.g-color-picker-c-hue-pointer {
     z-index: 2;
     position: absolute;
 }
 
-.g-color-c-hue-picker {
+.g-color-picker-c-hue-picker {
     cursor: pointer;
     width: 12px;
     height: 12px;
@@ -95,6 +96,6 @@ export default {
     box-shadow: 0 0 4px rgba(0, 0, 0, 1);
     background: #fff;
     margin-left: -6px;
-    margin-top: -1px;
+    margin-top: -2px;
 }
 </style>

@@ -88,7 +88,6 @@ export default {
             return `${ this.cancelButtonClass }`;
         },
         hasParent () {
-            console.log( this, this.parent, !!this.parent && this.parent instanceof HTMLElement )
             return !!this.parent && this.parent instanceof HTMLElement;
         }
     },

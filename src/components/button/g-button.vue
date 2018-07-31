@@ -64,6 +64,7 @@ export default {
     height: 28px;
     line-height: 26px;
     outline: none;
+    font-size: 13px;
 
     &[class*=g-icon-]+span {
         margin-left: 5px;
