@@ -4,18 +4,18 @@ GeoHey基于vue封装的通用组件
 
 > GeoHey Components
 
-## Build Setup
+## Scripts
 
 ``` bash
-# install dependencies
+# 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# 开发模式
 npm run dev
 
-# build for production with minification
+# 构建示例页面，生成docs目录
 npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
+# 构建代码库，用于发布新版本
+npm run release
 ```
